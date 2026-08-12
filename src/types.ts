@@ -77,6 +77,7 @@ export interface CareerState {
   meta: {
     clubTier: number;
   };
+  activeSeason?: ActiveSeasonState | null;
 }
 
 export interface Club {
@@ -215,9 +216,157 @@ export interface PressOption {
 
 export interface PressQuestion {
   id: string;
-  category: "Prensa" | "Vestuario" | "Patrocinio" | "Afición" | "Mercado" | "Entrevista";
+  category: "Prensa" | "Vestuario" | "Patrocinio" | "Afición" | "Mercado" | "Entrevista" | "Gestión" | "Finanzas" | "Equipación" | "Staff" | "Agente" | "Inversiones";
   question: string;
   reporter?: string;
   options: PressOption[];
 }
+
+export type TrainingDrillType = 
+  | "velocidad" 
+  | "tiro" 
+  | "regate" 
+  | "pase" 
+  | "defensa" 
+  | "fisico" 
+  | "resistencia" 
+  | "tecnica" 
+  | "equilibrado";
+
+export type SquadRole = "Suplente" | "Rotación" | "Titular" | "Jugador Importante" | "Estrella";
+
+export interface PlayerAttributes {
+  velocidad: number;
+  tiro: number;
+  regate: number;
+  pase: number;
+  defensa: number;
+  fisico: number;
+  resistencia: number;
+  tecnica: number;
+}
+
+export interface SeasonMatchResult {
+  homeGoals: number;
+  awayGoals: number;
+  playerGoals: number;
+  playerAssists: number;
+  playerRating: number;
+  playerMinutes: number;
+  wasSimulated: boolean;
+  matchHighlights?: string[];
+}
+
+export interface SeasonMatchFixture {
+  id: number;
+  week: number;
+  dateLabel: string;
+  competition: "Liga" | "Copa" | "Champions" | "Amistoso";
+  jornadaName: string;
+  opponent: string;
+  isHome: boolean;
+  importance: "Baja" | "Media" | "Alta" | "Crucial";
+  played: boolean;
+  result?: SeasonMatchResult;
+}
+
+export interface SeasonObjective {
+  id: string;
+  title: string;
+  target: number;
+  current: number;
+  rewardText: string;
+  completed: boolean;
+  rewardClaimed?: boolean;
+}
+
+export interface LeagueTableTeam {
+  rank: number;
+  team: string;
+  played: number;
+  won: number;
+  drawn: number;
+  lost: number;
+  gf: number;
+  ga: number;
+  pts: number;
+  isUser: boolean;
+}
+
+export interface ScorerEntry {
+  name: string;
+  club: string;
+  goals: number;
+  assists: number;
+  isUser: boolean;
+}
+
+export interface MatchEventChoice {
+  text: string;
+  statReq: keyof PlayerAttributes | "energy";
+  minStatVal?: number;
+  outcomeSuccess: { text: string; goalDelta: number; assistDelta: number; ratingDelta: number };
+  outcomeFail: { text: string; goalDelta: number; assistDelta: number; ratingDelta: number };
+}
+
+export interface MatchKeyMoment {
+  id: string;
+  minute: number;
+  title: string;
+  description: string;
+  choices: MatchEventChoice[];
+}
+
+export interface CareerEventOption {
+  id: string;
+  badgeText: string;
+  text: string;
+  detail: string;
+  effectText: string;
+  type: "starter" | "bench" | "extra_training" | "rest" | "tactics" | "captain" | "vestuario" | "press" | "renewal" | "custom";
+}
+
+export interface CareerDecisionEvent {
+  id: string;
+  category: "Míster" | "Vestuario" | "Entrenamiento" | "Carrera" | "Prensa" | "Especial";
+  speakerTitle: string;
+  speakerIcon: string;
+  title: string;
+  quote: string;
+  contextInfo?: string;
+  options: CareerEventOption[];
+}
+
+export interface ActiveSeasonState {
+  yearLabel: string;
+  currentFixtureIndex: number;
+  energy: number; // 0 - 100
+  fatigue: number; // 0 - 100
+  morale: number; // 0 - 100
+  coachTrust: number; // 0 - 100
+  confidence: number; // 0 - 100
+  form: number; // 0 - 100
+  lockerRoomRel: number; // 0 - 100
+  reputation: number; // 0 - 100
+  squadRole: SquadRole;
+  attributes: PlayerAttributes;
+  attributeXP: Record<keyof PlayerAttributes, number>;
+  yellowCards: number;
+  redCards: number;
+  suspendedMatches: number;
+  injury: { matchesLeft: number; title: string } | null;
+  seasonGoals: number;
+  seasonAssists: number;
+  seasonMatches: number;
+  seasonMinutes: number;
+  seasonRatings: number[];
+  fixtures: SeasonMatchFixture[];
+  standings: LeagueTableTeam[];
+  topScorers: ScorerEntry[];
+  objectives: SeasonObjective[];
+  recentEventsLog: string[];
+  recentNews?: string[];
+  pendingEvent?: CareerDecisionEvent | null;
+}
+
 

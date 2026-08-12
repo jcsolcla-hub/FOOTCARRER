@@ -16,6 +16,7 @@ import {
 } from "./lib/firebaseHelpers";
 import { 
   CareerState, 
+  ActiveSeasonState,
   SeasonSummary, 
   ChampionsOverview,
   TopTeam,
@@ -49,6 +50,8 @@ import { LoginView } from "./components/LoginView";
 import { WelcomeView } from "./components/WelcomeView";
 import { DashboardView } from "./components/DashboardView";
 import { RetirementView } from "./components/RetirementView";
+import { InteractiveSeasonView } from "./components/InteractiveSeasonView";
+import { initializeActiveSeason } from "./lib/seasonGenerator";
 import { CelebrationModal, MultiTitleModal } from "./components/CelebrationModal";
 import { 
   LuckSpinnerModal, 
@@ -67,7 +70,8 @@ import {
   LinkAccountModal,
   PressQuestionModal
 } from "./components/SeasonModals";
-import { getRandomPressQuestion } from "./data/pressQuestions";
+import { getRandomPressQuestion, getRandomManagementQuestion } from "./data/pressQuestions";
+import { TrainingQuestionModal, CupFinalModal } from "./components/SeasonDecisionModals";
 
 const SAVE_KEY = "leyenda_career_save_v2";
 
@@ -78,10 +82,12 @@ export default function App() {
   const [authBusy, setAuthBusy] = useState<boolean>(false);
 
   const [careerState, setCareerState] = useState<CareerState | null>(null);
+  const [inInteractiveMode, setInInteractiveMode] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Modals / Flow States
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
+  const [simPhaseText, setSimPhaseText] = useState<string>("Iniciando pretemporada...");
   const [callUpData, setCallUpData] = useState<{ nationality: string; flag: string; tourName: string; onContinue: () => void } | null>(null);
   const [groupStageData, setGroupStageData] = useState<{ nationality: string; tourName: string; result: GroupResult; onContinue: () => void } | null>(null);
   const [groupResultData, setGroupResultData] = useState<{ nationality: string; tourName: string; result: GroupResult; onContinue: () => void } | null>(null);
@@ -117,6 +123,13 @@ export default function App() {
 
   const [confirmModalData, setConfirmModalData] = useState<{ title: string; text: string; confirmText?: string; cancelText?: string; onConfirm: () => void; onCancel?: () => void } | null>(null);
   const [showLinkModal, setShowLinkModal] = useState<boolean>(false);
+  const [trainingModalData, setTrainingModalData] = useState<{ seasonYear: number; clubName: string; onSelectOption: (choice: "intensive" | "tactical" | "rest") => void } | null>(null);
+  const [showCupFinalModalData, setShowCupFinalModalData] = useState<{
+    finalTitle: string;
+    opponent: string;
+    userClub: string;
+    onSelectOption: (choice: "starter" | "bench" | "rest") => void;
+  } | null>(null);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -180,12 +193,72 @@ export default function App() {
   };
 
   /* ---------------------- Season Simulation Orchestration ---------------------- */
+  const handleStartInteractiveSeason = () => {
+    if (!careerState) return;
+    const p = careerState.player;
+    const clubObj = CLUBS.find((c) => c.name === p.club) || { tier: 3 };
+    
+    let updatedState: CareerState = { ...careerState };
+    if (!updatedState.activeSeason) {
+      updatedState.activeSeason = initializeActiveSeason(p, clubObj.tier);
+      saveState(updatedState);
+    }
+    setInInteractiveMode(true);
+  };
+
+  const handleUpdateActiveSeason = (updatedActiveSeason: ActiveSeasonState) => {
+    if (!careerState) return;
+    const updatedState: CareerState = {
+      ...careerState,
+      activeSeason: updatedActiveSeason
+    };
+    saveState(updatedState);
+  };
+
+  const handleFinishInteractiveSeason = (completedActiveSeason: ActiveSeasonState) => {
+    setInInteractiveMode(false);
+    runSeasonSimulation({ interactiveData: completedActiveSeason });
+  };
+
+  const handleFastForwardInteractiveSeason = () => {
+    setInInteractiveMode(false);
+    runSeasonSimulation(careerState?.activeSeason ? { interactiveData: careerState.activeSeason } : undefined);
+  };
+
+  const handleOpenPressQuestionModal = () => {
+    const qData = getRandomPressQuestion();
+    setPressQuestionModalData({
+      questionData: qData,
+      onSelectOption: (option: PressOption) => {
+        setPressQuestionModalData(null);
+        if (careerState) {
+          const stateCopy = JSON.parse(JSON.stringify(careerState));
+          if (option.statBonus?.levelDelta && stateCopy.player) {
+            stateCopy.player.level = clamp(stateCopy.player.level + option.statBonus.levelDelta, 40, 99);
+          }
+          if (option.statBonus?.moneyDelta && stateCopy.player) {
+            stateCopy.player.money += option.statBonus.moneyDelta;
+          }
+          if (stateCopy.activeSeason) {
+            stateCopy.activeSeason.morale = clamp(stateCopy.activeSeason.morale + 10, 0, 100);
+            stateCopy.activeSeason.coachTrust = clamp(stateCopy.activeSeason.coachTrust + 5, 0, 100);
+            stateCopy.activeSeason.recentEventsLog.unshift(`Prensa: "${option.effectText}"`);
+          }
+          saveState(stateCopy);
+        }
+        showToast(`🎤 ${option.effectText}`);
+      }
+    });
+  };
+
   const handlePlaySeason = () => {
     setIsSpinning(true);
+    setSimPhaseText("Simulando temporada...");
+
     setTimeout(() => {
       setIsSpinning(false);
       runSeasonSimulation();
-    }, 900);
+    }, 600);
   };
 
   const handleRetirePlayerVoluntarily = () => {
@@ -218,18 +291,39 @@ export default function App() {
     return "lateDecline";
   };
 
-  const runSeasonSimulation = () => {
-    if (!careerState) return;
-    const stateCopy = JSON.parse(JSON.stringify(careerState));
+  const runSeasonSimulation = (
+    options?: { finalChoice?: "starter" | "bench" | "rest"; interactiveData?: ActiveSeasonState },
+    currentState?: CareerState
+  ) => {
+    const activeState = currentState || careerState;
+    if (!activeState) return;
+    const stateCopy = JSON.parse(JSON.stringify(activeState));
     const p = stateCopy.player;
     const stage = getAgeStage(p.age);
     const clubObj = CLUBS.find((c) => c.name === p.club) || { tier: 3, league: "LL" };
     const clubTier = clubObj.tier;
     const leagueInfo = LEAGUES[clubObj.league] || LEAGUES.LL;
 
+    // Reset activeSeason for next season
+    stateCopy.activeSeason = null;
+
+    const interactiveData = options?.interactiveData;
+    let matches = interactiveData ? interactiveData.seasonMatches : randInt(28, 48);
+    let goals = interactiveData ? interactiveData.seasonGoals : 0;
+    let assists = interactiveData ? interactiveData.seasonAssists : 0;
+
+    const finalChoice = options?.finalChoice;
+    if (finalChoice === "starter") {
+      matches = Math.min(54, matches + randInt(2, 5));
+    } else if (finalChoice === "rest") {
+      matches = Math.max(12, matches - randInt(4, 8));
+    }
+
     const perfRoll = Math.random();
     const skillFactor = p.level / 99;
-    const performanceScore = clamp(perfRoll * 0.55 + skillFactor * 0.35 + (clubTier / 5) * 0.10, 0, 1);
+    const performanceScore = interactiveData
+      ? clamp(0.5 + (goals + assists * 0.7) / (matches || 1), 0.1, 0.99)
+      : clamp(perfRoll * 0.55 + skillFactor * 0.35 + (clubTier / 5) * 0.10, 0, 1);
 
     let perfTier: string;
     if (performanceScore > 0.82) perfTier = "extraordinary";
@@ -238,34 +332,37 @@ export default function App() {
     else if (performanceScore > 0.22) perfTier = "poor";
     else perfTier = "disastrous";
 
-    let matches = randInt(28, 48);
     let injuryText: string | null = null;
     let injuryReduction = 0;
-    const injuryRoll = Math.random();
-    const injuryProbability = 0.16 + (p.age > 30 ? (p.age - 30) * 0.015 : 0);
-
-    if (injuryRoll < injuryProbability) {
-      const severity = Math.random();
-      if (severity < 0.5) {
-        injuryReduction = randInt(3, 8);
-        injuryText = "Sufriste una lesión leve que te dejó fuera varias semanas.";
-      } else if (severity < 0.85) {
-        injuryReduction = randInt(9, 16);
-        injuryText = "Una lesión moderada te apartó de los terrenos de juego durante meses.";
-      } else {
-        injuryReduction = randInt(17, 28);
-        injuryText = "Sufriste una lesión grave que condicionó gran parte de tu temporada.";
-      }
-      matches = clamp(matches - injuryReduction, 2, 50);
-      p.injuredMatchesLost += injuryReduction;
-    }
 
     const posMultiplier: Record<string, number> = { POR: 0.02, DEF: 0.18, MED: 0.35, EXT: 0.55, DEL: 0.85 };
     const assistMultiplier: Record<string, number> = { POR: 0.01, DEF: 0.22, MED: 0.5, EXT: 0.6, DEL: 0.35 };
     const perfMult: Record<string, number> = { extraordinary: 1.5, great: 1.15, normal: 0.85, poor: 0.5, disastrous: 0.25 };
 
-    const goals = Math.round(matches * (posMultiplier[p.position] || 0.4) * (perfMult[perfTier] || 1) * (0.5 + Math.random() * 0.7));
-    const assists = Math.round(matches * (assistMultiplier[p.position] || 0.3) * (perfMult[perfTier] || 1) * (0.5 + Math.random() * 0.7));
+    if (!interactiveData) {
+      const injuryRoll = Math.random();
+      const injuryProbability = 0.16 + (p.age > 30 ? (p.age - 30) * 0.015 : 0);
+
+      if (injuryRoll < injuryProbability) {
+        const severity = Math.random();
+        if (severity < 0.5) {
+          injuryReduction = randInt(3, 8);
+          injuryText = "Sufriste una lesión leve que te dejó fuera varias semanas.";
+        } else if (severity < 0.85) {
+          injuryReduction = randInt(9, 16);
+          injuryText = "Una lesión moderada te apartó de los terrenos de juego durante meses.";
+        } else {
+          injuryReduction = randInt(17, 28);
+          injuryText = "Sufriste una lesión grave que condicionó gran parte de tu temporada.";
+        }
+        matches = clamp(matches - injuryReduction, 2, 50);
+        p.injuredMatchesLost += injuryReduction;
+      }
+
+      let goalBoost = finalChoice === "starter" ? 1.25 : finalChoice === "rest" ? 0.75 : 1.0;
+      goals = Math.round(matches * (posMultiplier[p.position] || 0.4) * (perfMult[perfTier] || 1) * (0.5 + Math.random() * 0.7) * goalBoost);
+      assists = Math.round(matches * (assistMultiplier[p.position] || 0.3) * (perfMult[perfTier] || 1) * (0.5 + Math.random() * 0.7) * goalBoost);
+    }
 
     p.matches += matches;
     p.goals += goals;
@@ -281,8 +378,10 @@ export default function App() {
     if (clubTier >= 5 && randomChance(0.2)) possibleTitles.push("Mundial de Clubes");
     if (randomChance(0.2)) possibleTitles.push("Supercopa");
 
-    // Factor de jerarquía según el nivel del equipo (Tier 5: Élite mundial, Tier 1: Equipo humilde)
-    const tierFactor = clubTier === 5 ? 1.0 : clubTier === 4 ? 0.38 : clubTier === 3 ? 0.12 : clubTier === 2 ? 0.03 : 0.008;
+    // Factor de jerarquía según el nivel del equipo y decisiones en partidos decisivos
+    const baseTierFactor = clubTier === 5 ? 1.0 : clubTier === 4 ? 0.38 : clubTier === 3 ? 0.12 : clubTier === 2 ? 0.03 : 0.008;
+    const finalBoost = finalChoice === "starter" ? 1.35 : finalChoice === "rest" ? 0.65 : 1.0;
+    const tierFactor = baseTierFactor * finalBoost;
 
     const wonTitles: string[] = [];
     possibleTitles.forEach((t) => {
@@ -1104,20 +1203,49 @@ export default function App() {
     const offerChance = isVeryGoodSeason ? 0.95 : (0.30 + clamp((p.level - 70) / 100, 0, 0.25));
     if (!contractEnds && randomChance(offerChance)) {
       queue.push((next) => {
-        const [offer] = generateOffers(p, 1, isVeryGoodSeason);
-        setSingleOfferData({
-          currentClub: p.club,
-          currentSalary: p.salary,
-          offer,
-          onStay: () => {
-            setSingleOfferData(null);
-            next();
+        setPressQuestionModalData({
+          questionData: {
+            id: "transfer_request_q",
+            category: "Mercado",
+            reporter: "Representante y Dirección Deportiva",
+            question: `Gestión de Traspaso y Mercado: Estás compitiendo en ${p.club}. ¿Deseas pedir a tu representante que busque ofertas de otros clubes en el mercado para cambiar de equipo o prefieres seguir en tu club actual?`,
+            options: [
+              {
+                text: "Solicitar Traspaso: Pedir a tu agente que busque ofertas de otros clubes.",
+                effectText: "Tu representante escucha propuestas del mercado internacional.",
+                statBonus: { scoreDelta: 20 }
+              },
+              {
+                text: `Continuar en ${p.club}: Reafirmar tu lealtad y seguir en tu equipo.`,
+                effectText: `Reafirmas tu compromiso con ${p.club} (+35 PTS Leyenda).`,
+                statBonus: { scoreDelta: 35 }
+              }
+            ]
           },
-          onAccept: () => {
-            setSingleOfferData(null);
-            acceptTransfer(stateCopy, offer);
-            next();
-          },
+          onSelectOption: (option) => {
+            setPressQuestionModalData(null);
+            if (option.text.startsWith("Solicitar Traspaso")) {
+              const offers = generateOffers(p, randInt(2, 3), isVeryGoodSeason);
+              setMultiOfferData({
+                currentClub: p.club,
+                offers,
+                onAcceptOffer: (o) => {
+                  setMultiOfferData(null);
+                  acceptTransfer(stateCopy, o);
+                  next();
+                },
+                onStay: () => {
+                  setMultiOfferData(null);
+                  showToast(`Rechazas las ofertas recibidas y decides continuar en ${p.club}.`);
+                  next();
+                }
+              });
+            } else {
+              saveState(stateCopy);
+              showToast(`💼 ${option.effectText}`);
+              next();
+            }
+          }
         });
       });
     }
@@ -1203,6 +1331,134 @@ export default function App() {
       });
     }
 
+    // Pregunta de Gestión / Decisión de Carrera, Finanzas y Equipación
+    if (randomChance(0.90)) {
+      queue.push((next) => {
+        const mgmtData = getRandomManagementQuestion();
+        setPressQuestionModalData({
+          questionData: mgmtData,
+          onSelectOption: (option) => {
+            setPressQuestionModalData(null);
+            if (option.statBonus) {
+              if (option.statBonus.levelDelta) {
+                p.level = clamp(p.level + option.statBonus.levelDelta, 40, 99);
+              }
+              if (option.statBonus.moneyDelta) {
+                p.money = Math.round((p.money + option.statBonus.moneyDelta) * 10) / 10;
+                p.totalMoneyEarned += Math.max(0, option.statBonus.moneyDelta);
+              }
+              if (option.statBonus.scoreDelta) {
+                p.score += option.statBonus.scoreDelta;
+              }
+            }
+            saveState(stateCopy);
+            showToast(`💼 ${option.effectText}`);
+            next();
+          }
+        });
+      });
+    }
+
+    // Pregunta de Plan de Entrenamiento y Evolución de OVR
+    if (randomChance(0.90)) {
+      queue.push((next) => {
+        setPressQuestionModalData({
+          questionData: {
+            id: "training_plan_q",
+            category: "Entrenamiento",
+            reporter: "Cuerpo Técnico",
+            question: `Plan de Entrenamiento: ¿Qué intensidad aplicas esta temporada con ${p.club}?`,
+            options: [
+              {
+                text: "🏋️ Entrenamiento Intensivo: Exigencia máxima",
+                effectText: "🎲 60% de ganar +1.5 a +2.0 OVR o 40% de molestia (-0.5 OVR)."
+              },
+              {
+                text: "🧠 Entrenamiento Táctico: Trabajo equilibrado",
+                effectText: "Progresión constante y segura (+0.8 OVR)."
+              },
+              {
+                text: "😴 Descanso Fisioterapéutico: Recuperación",
+                effectText: "Mantienes tu OVR intacto y evitas lesiones por sobrecarga."
+              }
+            ]
+          },
+          onSelectOption: (option) => {
+            setPressQuestionModalData(null);
+            let ovrDelta = 0;
+            if (option.text.includes("Intensivo")) {
+              const isSuccess = randomChance(0.60);
+              if (isSuccess) {
+                ovrDelta = randInt(15, 20) / 10;
+                showToast(`🏋️ ¡Progreso espectacular! +${ovrDelta} OVR.`);
+              } else {
+                ovrDelta = -(randInt(5, 10) / 10);
+                showToast(`⚠️ Sobrecarga muscular: ${ovrDelta} OVR.`);
+              }
+            } else if (option.text.includes("Táctico")) {
+              ovrDelta = 0.8;
+              showToast("🧠 Entrenamiento táctico completado (+0.8 OVR).");
+            } else {
+              ovrDelta = 0;
+              showToast("😴 Descanso fisioterapéutico completado (0 OVR, frescura total).");
+            }
+
+            p.level = clamp(p.level + ovrDelta, 40, 99);
+            saveState(stateCopy);
+            next();
+          }
+        });
+      });
+    }
+
+    // Pregunta de Partidos Clave y Grandes Finales
+    if (randomChance(0.85)) {
+      queue.push((next) => {
+        const clubObj = CLUBS.find((c) => c.name === p.club) || { league: "LL" };
+        const leagueInfo = LEAGUES[clubObj.league] || LEAGUES.LL;
+        const mainCup = leagueInfo.cup || "Copa del Rey";
+        const mainOpponent = pick(OPPONENTS_POOL.filter((o) => o !== p.club));
+
+        setPressQuestionModalData({
+          questionData: {
+            id: "cup_final_q",
+            category: "Finales",
+            reporter: "Rueda de Prensa / Entrenador",
+            question: `Gran Final de ${mainCup}: Enfrentamiento decisivo vs ${mainOpponent}. ¿Juegas la final?`,
+            options: [
+              {
+                text: "🟢 Jugar la Final de Titular desde el inicio",
+                effectText: "Máximo protagonismo (+0.3 OVR / +40 PTS Leyenda)."
+              },
+              {
+                text: "🔵 Entrar como Revulsivo en la 2ª parte",
+                effectText: "Aportas frescura táctica en momentos clave (+20 PTS Leyenda)."
+              },
+              {
+                text: "😴 Descansar en el Banquillo y no jugar",
+                effectText: "Evitas sobrecarga muscular y previenes lesiones."
+              }
+            ]
+          },
+          onSelectOption: (option) => {
+            setPressQuestionModalData(null);
+            if (option.text.includes("Titular")) {
+              p.level = clamp(p.level + 0.3, 40, 99);
+              p.score += 40;
+              showToast("🟢 Juegas la Gran Final de titular (+0.3 OVR).");
+            } else if (option.text.includes("Revulsivo")) {
+              p.score += 20;
+              showToast("🔵 Entras como revulsivo en la 2ª parte de la Final.");
+            } else {
+              showToast("😴 Decides descansar y no disputar la Final.");
+            }
+            saveState(stateCopy);
+            next();
+          }
+        });
+      });
+    }
+
     // Retirement check
     queue.push((next) => {
       if (p.age >= 30) {
@@ -1222,25 +1478,40 @@ export default function App() {
           return;
         }
 
-        // Opción explícita de retirada al cumplir 35 años o más
-        if (p.age >= 35 && !p.retired) {
-          setConfirmModalData({
-            title: `👴 OPCIÓN DE RETIRADA (${p.age} AÑOS)`,
-            text: `Has alcanzado los ${p.age} años de edad. ¿Deseas colgar las botas y retirarte oficialmente del fútbol al final de esta temporada?`,
-            confirmText: "🏆 Anunciar Retirada",
-            cancelText: "⚽ Jugar 1 Temporada Más",
-            onConfirm: () => {
-              setConfirmModalData(null);
-              p.retired = true;
-              addTimeline(p, p.age, `RETIRADA VOLUNTARIA. Te retiras del fútbol profesional a los ${p.age} años.`);
-              saveState(stateCopy);
-              showToast(`¡Has anunciado tu retirada profesional a los ${p.age} años!`);
-              next();
+        // Opción explícita de retirada al cumplir 34 años o más
+        if (p.age >= 34 && !p.retired) {
+          setPressQuestionModalData({
+            questionData: {
+              id: "retirement_decision_q",
+              category: "Gestión",
+              reporter: "Rueda de Prensa y Familia",
+              question: `Decisión de Futuro y Retirada: Tienes ${p.age} años de edad. Tras una destacada trayectoria en el fútbol profesional, ¿has decidido colgar las botas al término de esta temporada?`,
+              options: [
+                {
+                  text: "🏆 Anunciar tu retirada oficial del fútbol profesional.",
+                  effectText: "Pones punto y final a tu carrera deportiva como una auténtica leyenda.",
+                  statBonus: { scoreDelta: 100 }
+                },
+                {
+                  text: "⚽ Continuar compitiendo en activo al menos una temporada más.",
+                  effectText: "Decides seguir en activo y disputar la próxima temporada con máxima ilusión.",
+                  statBonus: { scoreDelta: 20 }
+                }
+              ]
             },
-            onCancel: () => {
-              setConfirmModalData(null);
-              showToast("¡Decides jugar una temporada más!");
-              next();
+            onSelectOption: (option) => {
+              setPressQuestionModalData(null);
+              if (option.text.startsWith("🏆 Anunciar")) {
+                p.retired = true;
+                addTimeline(p, p.age, `RETIRADA VOLUNTARIA. Te retiras del fútbol profesional a los ${p.age} años.`);
+                saveState(stateCopy);
+                showToast(`👴 ¡Anuncias tu retirada oficial del fútbol profesional a los ${p.age} años!`);
+                next();
+              } else {
+                saveState(stateCopy);
+                showToast("⚽ ¡Decides competir al menos una temporada más!");
+                next();
+              }
             }
           });
           return;
@@ -1376,11 +1647,33 @@ export default function App() {
           }}
           onLogout={() => doLogout()}
         />
+      ) : inInteractiveMode && careerState.activeSeason ? (
+        <InteractiveSeasonView
+          currentUser={currentUser}
+          state={careerState}
+          activeSeason={careerState.activeSeason}
+          onUpdateActiveSeason={handleUpdateActiveSeason}
+          onFinishSeason={handleFinishInteractiveSeason}
+          onFastForwardSeason={handleFastForwardInteractiveSeason}
+          onOpenPressModal={handleOpenPressQuestionModal}
+          onLogout={() => {
+            setConfirmModalData({
+              title: "¿Cerrar sesión?",
+              text: "Tu partida ya está guardada en tu cuenta, podrás continuar la próxima vez que inicies sesión.",
+              onConfirm: () => {
+                setConfirmModalData(null);
+                doLogout();
+              },
+            });
+          }}
+          onLinkAccount={() => setShowLinkModal(true)}
+        />
       ) : (
         <DashboardView
           currentUser={currentUser}
           state={careerState}
           onPlaySeason={handlePlaySeason}
+          onStartInteractiveSeason={handleStartInteractiveSeason}
           onRetirePlayer={handleRetirePlayerVoluntarily}
           onNewCareer={() => {
             setConfirmModalData({
@@ -1407,7 +1700,7 @@ export default function App() {
       )}
 
       {/* Modals & Overlay Sequence */}
-      {isSpinning && <LuckSpinnerModal />}
+      {isSpinning && <LuckSpinnerModal phaseText={simPhaseText} />}
 
       {callUpData && (
         <CallUpModal
@@ -1564,6 +1857,23 @@ export default function App() {
             doEmailSignup(email, pass).catch((e: any) => setAuthError(e.message));
           }}
           onCancel={() => setShowLinkModal(false)}
+        />
+      )}
+
+      {trainingModalData && (
+        <TrainingQuestionModal
+          seasonYear={trainingModalData.seasonYear}
+          clubName={trainingModalData.clubName}
+          onSelectOption={trainingModalData.onSelectOption}
+        />
+      )}
+
+      {showCupFinalModalData && (
+        <CupFinalModal
+          finalTitle={showCupFinalModalData.finalTitle}
+          opponent={showCupFinalModalData.opponent}
+          userClub={showCupFinalModalData.userClub}
+          onSelectOption={showCupFinalModalData.onSelectOption}
         />
       )}
     </div>

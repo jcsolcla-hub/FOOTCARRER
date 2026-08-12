@@ -66,10 +66,10 @@ export function authErrorMessage(err: any): string {
     "auth/popup-closed-by-user": "Has cerrado la ventana antes de completar el inicio de sesión.",
     "auth/cancelled-popup-request": "Solicitud de inicio de sesión cancelada.",
     "auth/popup-blocked": "El navegador ha bloqueado la ventana emergente. Permite pop-ups para continuar.",
-    "auth/operation-not-allowed": "Este método de acceso no está activado en Firebase Console.",
+    "auth/operation-not-allowed": "Este método de acceso no está activado en Firebase Console (Authentication → Sign-in method).",
     "auth/credential-already-in-use": "Esa cuenta ya está vinculada a otro usuario.",
     "auth/network-request-failed": "Error de red. Comprueba tu conexión.",
-    "auth/unauthorized-domain": "Este dominio no está autorizado en Firebase Console (Authentication → Settings → Authorized domains).",
+    "auth/unauthorized-domain": "Este dominio no está autorizado. Ve a Firebase Console → Authentication → Settings → Authorized domains y añade 'footcarrer.vercel.app' y 'vercel.app'.",
   };
   return map[code] || err.message || "Ha ocurrido un error inesperado.";
 }

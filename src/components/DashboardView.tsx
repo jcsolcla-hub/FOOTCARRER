@@ -31,6 +31,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onLinkAccount,
 }) => {
   const p = state.player;
+  const hasActiveSeason = Boolean(state.activeSeason);
   const yearLabel = `${p.seasonYearStart}/${(p.seasonYearStart + 1).toString().slice(2)}`;
   const potentialPct = clamp(Math.round((p.level / p.potential) * 100), 5, 100);
   const trophyEntries = Object.entries(p.trophiesList);
@@ -141,33 +142,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         )}
       </div>
 
-      <div className="season-btn-wrap" style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
-        <div className="season-num mono">Pulsa para simular la temporada {p.season}</div>
-        <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap", width: "100%", maxWidth: "500px" }}>
-          <button className="btn btn-primary play-btn" onClick={onPlaySeason} style={{ flex: "1 1 200px" }}>
-            ▶ JUGAR TEMPORADA
+      <div className="season-btn-wrap" style={{ display: "flex", flexDirection: "column", gap: "12px", alignItems: "center" }}>
+        <div className="season-num mono">Pulsa para iniciar la Temporada {p.season}</div>
+        
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px", width: "100%", maxWidth: "520px" }}>
+          <button 
+            className="btn btn-primary play-btn" 
+            onClick={onPlaySeason}
+            style={{ 
+              width: "100%", 
+              padding: "16px", 
+              fontSize: "16px", 
+              fontWeight: "bold",
+              background: "linear-gradient(135deg, #e8b84b 0%, #d49f2b 100%)",
+              boxShadow: "0 6px 20px rgba(232, 184, 75, 0.35)",
+              letterSpacing: "0.5px"
+            }}
+          >
+            ▶ SIMULAR TEMPORADA {p.season}
           </button>
-          {p.age >= 35 && onRetirePlayer && (
-            <button 
-              className="btn" 
-              onClick={onRetirePlayer}
-              style={{ 
-                background: "rgba(239, 68, 68, 0.15)", 
-                border: "1px solid rgba(239, 68, 68, 0.35)", 
-                color: "#f87171",
-                fontWeight: 700,
-                padding: "12px 18px",
-                borderRadius: "12px",
-                fontSize: "13px",
-                cursor: "pointer",
-                transition: "all 0.2s"
-              }}
-            >
-              👴 RETIRARME ({p.age} AÑOS)
-            </button>
-          )}
         </div>
       </div>
+
 
       <div className="card">
         <h3 style={{ marginBottom: "4px" }}>🏆 Mi Palmarés</h3>

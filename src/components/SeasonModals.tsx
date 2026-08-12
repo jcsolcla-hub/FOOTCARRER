@@ -11,13 +11,15 @@ import {
 import { flagOf, fmtMoney, fmtSalary, POS_NAMES } from "../data/clubsAndLeagues";
 import { GoogleLogo, AppleLogo } from "./SocialLogos";
 
-export const LuckSpinnerModal: React.FC = () => (
-  <div className="modal-backdrop">
-    <div className="modal">
-      <div className="eyebrow">Simulando temporada</div>
-      <h2 style={{ marginTop: "8px" }}>Suerte…</h2>
-      <div className="luck-spinner"></div>
-      <p>Rodando los dados de tu carrera.</p>
+export const LuckSpinnerModal: React.FC<{ phaseText?: string }> = ({ phaseText }) => (
+  <div className="modal-backdrop" style={{ zIndex: 9000 }}>
+    <div className="modal" style={{ textAlign: "center", maxWidth: "440px" }}>
+      <div className="eyebrow" style={{ color: "var(--gold)", letterSpacing: "1px" }}>⚡ SIMULANDO TEMPORADA EN DIRECTO</div>
+      <h2 style={{ marginTop: "8px", fontSize: "22px" }}>Avanzando Temporada…</h2>
+      <div className="luck-spinner" style={{ margin: "20px auto" }}></div>
+      <p style={{ fontSize: "14px", color: "#e2e8f0", fontWeight: 500, minHeight: "24px" }}>
+        {phaseText || "Rodando partidos, eventos y decisiones de tu carrera."}
+      </p>
     </div>
   </div>
 );
@@ -919,7 +921,7 @@ export const PressQuestionModal: React.FC<PressQuestionModalProps> = ({
   onSelectOption,
 }) => {
   return (
-    <div className="modal-backdrop">
+    <div className="modal-backdrop" style={{ zIndex: 9999, background: "rgba(0, 0, 0, 0.88)", backdropFilter: "blur(6px)" }}>
       <div className="modal" style={{ maxWidth: "520px", textAlign: "left" }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
           <div className="eyebrow" style={{ margin: 0 }}>

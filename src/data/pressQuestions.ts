@@ -203,7 +203,138 @@ export const PRESS_QUESTIONS: PressQuestion[] = [
   }
 ];
 
+export const MANAGEMENT_QUESTIONS: PressQuestion[] = [
+  {
+    id: "mgmt_01",
+    category: "Agente",
+    reporter: "Oficinas del Representante",
+    question: "Gestión de Carrera: Un prestigioso superagente internacional te ofrece unirse a su agencia VIP. Promete mayores comisiones, patrocinios globales y facilidades para fichar por clubes de la élite europea.",
+    options: [
+      {
+        text: "Firmar con la Agencia VIP Internacional.",
+        effectText: "Te abre las puertas de los gigantes de Europa (+1.5 Nivel OVR / +1 M€).",
+        statBonus: { levelDelta: 1.5, moneyDelta: 1, scoreDelta: 30 }
+      },
+      {
+        text: "Mantener a tu representante de confianza de toda la vida.",
+        effectText: "Tu lealtad fortalece la estabilidad de tu entorno (+45 Puntos Leyenda).",
+        statBonus: { scoreDelta: 45 }
+      },
+      {
+        text: "Gestionar tú mismo tus propios contratos sin comisiones de intermediarios.",
+        effectText: "Ahorras sustanciales comisiones financieras (+2 M€).",
+        statBonus: { moneyDelta: 2, scoreDelta: 15 }
+      }
+    ]
+  },
+  {
+    id: "mgmt_02",
+    category: "Equipación",
+    reporter: "Departamento de Material Deportivo",
+    question: "Gestión de Equipación: Una firma multinacional de calzado deportivo te propone diseñar tus propias botas personalizadas con fibra de carbono para maximizar tu rendimiento.",
+    options: [
+      {
+        text: "Invertir en tus botas de fibra de carbono a medida.",
+        effectText: "Optimizas tu aceleración y potencia de disparo en el campo (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 20 }
+      },
+      {
+        text: "Aceptar un patrocinio exclusivo de botas estándar.",
+        effectText: "Cobras una jugosa prima económica por el acuerdo de calzado (+1.5 M€).",
+        statBonus: { moneyDelta: 1.5, scoreDelta: 15 }
+      },
+      {
+        text: "Jugar con las botas tradicionales del club.",
+        effectText: "Mantienes una estética austera muy valorada por la hinchada (+30 PTS Leyenda).",
+        statBonus: { scoreDelta: 30 }
+      }
+    ]
+  },
+  {
+    id: "mgmt_03",
+    category: "Staff",
+    reporter: "Centro de Alto Rendimiento",
+    question: "Gestión de Salud y Preparación: Tu preparador físico te sugiere contratar un fisioterapeuta, nutricionista y recuperador personal exclusivo para trabajar diariamente en tu domicilio.",
+    options: [
+      {
+        text: "Contratar al Staff Personal VIP de alta rendimiento.",
+        effectText: "Optimizas tu tono muscular y aceleras tu evolución deportiva (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 25 }
+      },
+      {
+        text: "Trabajar únicamente con los servicios médicos oficiales de la plantilla.",
+        effectText: "Rendimiento óptimo manteniendo tus ahorros protegidos.",
+        statBonus: { scoreDelta: 10 }
+      }
+    ]
+  },
+  {
+    id: "mgmt_04",
+    category: "Inversiones",
+    reporter: "Gabinete Financiero",
+    question: "Gestión Patrimonial: Tu asesor financiero te presenta un plan estratégico para diversificar tus ganancias en activos inmobiliarios, franquicias de restauración y startups tecnológicas.",
+    options: [
+      {
+        text: "Invertir en el fondo inmobiliario y negocios internacionales.",
+        effectText: "Multiplicas sustancialmente tu fortuna e ingresos patrimoniales (+3 M€).",
+        statBonus: { moneyDelta: 3, scoreDelta: 20 }
+      },
+      {
+        text: "Fundar tu propia escuela de fútbol base para jóvenes talentos.",
+        effectText: "Creas un legado de impacto social inolvidable (+50 Puntos Leyenda).",
+        statBonus: { scoreDelta: 50 }
+      },
+      {
+        text: "Mantener tu dinero en depósitos bancarios de alta seguridad.",
+        effectText: "Tranquilidad financiera total sin asumir riesgos.",
+        statBonus: { scoreDelta: 10 }
+      }
+    ]
+  },
+  {
+    id: "mgmt_05",
+    category: "Finanzas",
+    reporter: "Asesoría de Imagen y Lujo",
+    question: "Gestión de Estilo de Vida: Tus asesores de imagen recomiendan adquirir una residencia VIP en la zona más exclusiva y un vehículo deportivo de alta gama para proyectar estatus mediático.",
+    options: [
+      {
+        text: "Adquirir la residencia VIP y el vehículo deportivo.",
+        effectText: "Te conviertes en una figura mediática y de la moda mundial (+45 Puntos Leyenda).",
+        statBonus: { scoreDelta: 45, moneyDelta: -0.5 }
+      },
+      {
+        text: "Llevar un estilo de vida austero y centrado al 100% en el fútbol.",
+        effectText: "Te ganas el respeto total de tus compañeros y la prensa por tu humildad (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 25 }
+      }
+    ]
+  },
+  {
+    id: "mgmt_06",
+    category: "Patrocinio",
+    reporter: "Productora Audiovisual Internacional",
+    question: "Gestión de Marca Personal: Una plataforma de streaming líder desea rodar un documental sobre tu vida privada y trayectoria deportiva.",
+    options: [
+      {
+        text: "Firmar la producción del documental sobre tu carrera.",
+        effectText: "Disparas tu popularidad global y firmas cuantiosos acuerdos (+2 M€ / +35 PTS Leyenda).",
+        statBonus: { moneyDelta: 2, scoreDelta: 35 }
+      },
+      {
+        text: "Declinar la propuesta para priorizar la privacidad de tu familia.",
+        effectText: "Enfoque deportivo total que se nota en tus entrenamientos (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 15 }
+      }
+    ]
+  }
+];
+
 export function getRandomPressQuestion(): PressQuestion {
   const index = Math.floor(Math.random() * PRESS_QUESTIONS.length);
   return PRESS_QUESTIONS[index];
+}
+
+export function getRandomManagementQuestion(): PressQuestion {
+  const index = Math.floor(Math.random() * MANAGEMENT_QUESTIONS.length);
+  return MANAGEMENT_QUESTIONS[index];
 }
