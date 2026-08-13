@@ -1367,19 +1367,19 @@ export default function App() {
             id: "training_plan_q",
             category: "Entrenamiento",
             reporter: "Cuerpo Técnico",
-            question: `Plan de Entrenamiento: ¿Qué intensidad aplicas esta temporada con ${p.club}?`,
+            question: `Plan de Entrenamiento: ¿Qué plan sigues esta temporada en ${p.club}?`,
             options: [
               {
-                text: "🏋️ Entrenamiento Intensivo: Exigencia máxima",
-                effectText: "🎲 60% de ganar +1.5 a +2.0 OVR o 40% de molestia (-0.5 OVR)."
+                text: "🏋️ Intensivo: Máxima exigencia",
+                effectText: "🎲 +1.5 a +2.0 OVR (60% éxito) o molestia (-0.5 OVR)."
               },
               {
-                text: "🧠 Entrenamiento Táctico: Trabajo equilibrado",
-                effectText: "Progresión constante y segura (+0.8 OVR)."
+                text: "🧠 Táctico: Trabajo equilibrado",
+                effectText: "Progresión segura (+0.8 OVR)."
               },
               {
-                text: "😴 Descanso Fisioterapéutico: Recuperación",
-                effectText: "Mantienes tu OVR intacto y evitas lesiones por sobrecarga."
+                text: "😴 Descanso: Recuperación",
+                effectText: "Mantienes tu OVR y evitas lesiones."
               }
             ]
           },
@@ -1390,17 +1390,17 @@ export default function App() {
               const isSuccess = randomChance(0.60);
               if (isSuccess) {
                 ovrDelta = randInt(15, 20) / 10;
-                showToast(`🏋️ ¡Progreso espectacular! +${ovrDelta} OVR.`);
+                showToast(`🏋️ ¡Gran progreso! +${ovrDelta} OVR.`);
               } else {
                 ovrDelta = -(randInt(5, 10) / 10);
                 showToast(`⚠️ Sobrecarga muscular: ${ovrDelta} OVR.`);
               }
             } else if (option.text.includes("Táctico")) {
               ovrDelta = 0.8;
-              showToast("🧠 Entrenamiento táctico completado (+0.8 OVR).");
+              showToast("🧠 Entrenamiento completado (+0.8 OVR).");
             } else {
               ovrDelta = 0;
-              showToast("😴 Descanso fisioterapéutico completado (0 OVR, frescura total).");
+              showToast("😴 Descanso completado (0 OVR).");
             }
 
             p.level = clamp(p.level + ovrDelta, 40, 99);
@@ -1411,47 +1411,117 @@ export default function App() {
       });
     }
 
-    // Pregunta de Partidos Clave y Grandes Finales
-    if (randomChance(0.85)) {
+    // Pregunta de Partidos Clave y Grandes Finales (Probabilidad reducida a 35% para que no sea repetitivo)
+    if (randomChance(0.35)) {
       queue.push((next) => {
-        const clubObj = CLUBS.find((c) => c.name === p.club) || { league: "LL" };
+        const clubObj = CLUBS.find((c) => c.name === p.club) || { league: "LL", tier: 3, country: "España" };
         const leagueInfo = LEAGUES[clubObj.league] || LEAGUES.LL;
-        const mainCup = leagueInfo.cup || "Copa del Rey";
-        const mainOpponent = pick(OPPONENTS_POOL.filter((o) => o !== p.club));
+        const country = clubObj.country || leagueInfo.country || "España";
+
+        // Selección lógica de Torneo/Final
+        let possibleCups: string[] = [];
+        if (country === "España" || clubObj.league === "LL" || clubObj.league === "ESP2") {
+          if (clubObj.tier >= 4) {
+            possibleCups = ["Copa del Rey", "Supercopa de España", "UEFA Champions League", "UEFA Europa League"];
+          } else if (clubObj.tier >= 2) {
+            possibleCups = ["Copa del Rey", "Supercopa de España", "UEFA Europa League", "Copa RFEF"];
+          } else {
+            possibleCups = ["Copa del Rey", "Playoff de Ascenso"];
+          }
+        } else if (country === "Inglaterra" || clubObj.league === "PL" || clubObj.league === "ENG2") {
+          possibleCups = ["FA Cup", "Carabao Cup", "UEFA Champions League", "Community Shield"];
+        } else if (country === "Italia" || clubObj.league === "SA" || clubObj.league === "ITA2") {
+          possibleCups = ["Coppa Italia", "Supercoppa Italiana", "UEFA Champions League"];
+        } else if (country === "Alemania" || clubObj.league === "BL" || clubObj.league === "GER2") {
+          possibleCups = ["DFB-Pokal", "DFL-Supercup", "UEFA Champions League"];
+        } else if (country === "Francia" || clubObj.league === "L1" || clubObj.league === "FRA2") {
+          possibleCups = ["Coupe de France", "Trophée des Champions", "UEFA Champions League"];
+        } else {
+          possibleCups = [leagueInfo.cup || "Copa Nacional", "Supercopa Nacional", "Copa Continental"];
+        }
+        const mainCup = pick(possibleCups);
+
+        // Selección de rival lógico
+        let rivalCandidates: string[] = [];
+        if (country === "España" || clubObj.league === "LL" || clubObj.league === "ESP2") {
+          const SPANISH_FINALISTS = [
+            "Real Madrid", "FC Barcelona", "Atlético de Madrid", "Athletic Club",
+            "Real Sociedad", "Sevilla FC", "Real Betis", "Villarreal CF",
+            "Valencia CF", "Girona FC", "CA Osasuna", "RCD Mallorca", "Celta de Vigo"
+          ];
+          rivalCandidates = SPANISH_FINALISTS.filter((o) => o !== p.club);
+        } else {
+          rivalCandidates = CLUBS.filter((c) => (c.country === country || c.league === clubObj.league) && c.name !== p.club && c.tier >= 2).map((c) => c.name);
+        }
+        if (rivalCandidates.length === 0) {
+          rivalCandidates = OPPONENTS_POOL.filter((o) => o !== p.club);
+        }
+        const mainOpponent = pick(rivalCandidates);
 
         setPressQuestionModalData({
           questionData: {
             id: "cup_final_q",
             category: "Finales",
-            reporter: "Rueda de Prensa / Entrenador",
-            question: `Gran Final de ${mainCup}: Enfrentamiento decisivo vs ${mainOpponent}. ¿Juegas la final?`,
+            reporter: "Prensa / Entrenador",
+            question: `Final de ${mainCup} vs ${mainOpponent}. ¿Qué rol juegas?`,
             options: [
               {
-                text: "🟢 Jugar la Final de Titular desde el inicio",
-                effectText: "Máximo protagonismo (+0.3 OVR / +40 PTS Leyenda)."
+                text: "🟢 Titular",
+                effectText: "Máximo rol (+0.3 OVR / Más opción de título)."
               },
               {
-                text: "🔵 Entrar como Revulsivo en la 2ª parte",
-                effectText: "Aportas frescura táctica en momentos clave (+20 PTS Leyenda)."
+                text: "🔵 Revulsivo",
+                effectText: "Entras en la 2ª parte (+0.1 OVR)."
               },
               {
-                text: "😴 Descansar en el Banquillo y no jugar",
-                effectText: "Evitas sobrecarga muscular y previenes lesiones."
+                text: "😴 Banquillo",
+                effectText: "Descansas y evitas desgaste."
               }
             ]
           },
           onSelectOption: (option) => {
             setPressQuestionModalData(null);
-            if (option.text.includes("Titular")) {
+            const isStarter = option.text.includes("Titular");
+            const isSub = option.text.includes("Revulsivo");
+
+            let winProb = 0.48;
+            if (isStarter) {
               p.level = clamp(p.level + 0.3, 40, 99);
-              p.score += 40;
-              showToast("🟢 Juegas la Gran Final de titular (+0.3 OVR).");
-            } else if (option.text.includes("Revulsivo")) {
-              p.score += 20;
-              showToast("🔵 Entras como revulsivo en la 2ª parte de la Final.");
+              winProb += 0.12 + (p.level >= 80 ? 0.12 : p.level >= 70 ? 0.05 : 0);
+            } else if (isSub) {
+              p.level = clamp(p.level + 0.1, 40, 99);
+              winProb += 0.06 + (p.level >= 80 ? 0.08 : 0);
             } else {
-              showToast("😴 Decides descansar y no disputar la Final.");
+              winProb += 0.02;
             }
+
+            const wonMatch = randomChance(clamp(winProb, 0.25, 0.85));
+            let userGoals = 0;
+            let rivalGoals = 0;
+
+            if (wonMatch) {
+              userGoals = randInt(1, 3);
+              rivalGoals = Math.max(0, userGoals - randInt(1, 2));
+              if (userGoals === rivalGoals) userGoals++;
+            } else {
+              rivalGoals = randInt(1, 3);
+              userGoals = Math.max(0, rivalGoals - randInt(1, 2));
+              if (userGoals === rivalGoals) rivalGoals++;
+            }
+
+            if (wonMatch) {
+              p.titles = (p.titles || 0) + 1;
+              p.score += isStarter ? 60 : isSub ? 40 : 25;
+              p.trophiesList = p.trophiesList || {};
+              p.trophiesList[mainCup] = (p.trophiesList[mainCup] || 0) + 1;
+              addTimeline(p, p.age, `🏆 CAMPEÓN de la ${mainCup} (${userGoals}-${rivalGoals} vs ${mainOpponent}).`);
+              showToast(`🏆 ¡CAMPEONES! Ganáis ${userGoals}-${rivalGoals} al ${mainOpponent} en la Final de ${mainCup}. ¡Levantas el título!`);
+            } else {
+              p.score += isStarter ? 20 : isSub ? 10 : 0;
+              addTimeline(p, p.age, `🥈 Subcampeón de la ${mainCup} (caéis ${userGoals}-${rivalGoals} vs ${mainOpponent}).`);
+              showToast(`🥈 SUBCAMPEONES: Caéis derrotados ${userGoals}-${rivalGoals} ante el ${mainOpponent} en la Final de ${mainCup}.`);
+            }
+
             saveState(stateCopy);
             next();
           }
