@@ -10,6 +10,7 @@ import {
   doPasswordReset 
 } from "../lib/firebaseHelpers";
 import { GoogleLogo, AppleLogo } from "./SocialLogos";
+import { SeoInfoSection } from "./SeoInfoSection";
 
 interface LoginViewProps {
   currentUser: User | null;
@@ -109,16 +110,19 @@ export const LoginView: React.FC<LoginViewProps> = ({
 
   return (
     <div className="auth-wrap">
-      <div className="auth-logo">
+      <header className="auth-logo">
         <div className="field-mark"></div>
         <img 
           src={appIconImg} 
-          alt="Footcarrer Logo" 
+          alt="FootCarrer - Football Career Simulator Logo" 
           style={{ width: "72px", height: "72px", borderRadius: "16px", objectFit: "cover", margin: "0 auto 10px", border: "2px solid var(--gold)", boxShadow: "0 4px 18px rgba(232, 184, 75, 0.22)" }} 
         />
-        <div className="eyebrow">Simulador de carrera · edición 2026</div>
-        <h1>Footcarrer</h1>
-      </div>
+        <div className="eyebrow">Simulador de Carrera Futbolística · Edición 2026</div>
+        <h1>Football Career Simulator</h1>
+        <p className="sub" style={{ fontSize: "13px", marginTop: "4px", color: "var(--muted)" }}>
+          Simula tu carrera futbolística, ficha por los mejores clubes y conviértete en leyenda.
+        </p>
+      </header>
       <div className="card">
         {isLinking && (
           <p style={{ color: "var(--muted)", fontSize: "12.5px", marginBottom: "12px", textAlign: "center" }}>
@@ -216,6 +220,11 @@ export const LoginView: React.FC<LoginViewProps> = ({
         <div className="auth-links">
           <a onClick={handleForgot} style={{ cursor: "pointer" }}>¿Has olvidado tu contraseña?</a>
         </div>
+      </div>
+
+      {/* Guía SEO e información accesible */}
+      <div style={{ maxWidth: "860px", margin: "0 auto", width: "100%" }}>
+        <SeoInfoSection />
       </div>
     </div>
   );

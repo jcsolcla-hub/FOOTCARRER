@@ -51,6 +51,7 @@ import { WelcomeView } from "./components/WelcomeView";
 import { DashboardView } from "./components/DashboardView";
 import { RetirementView } from "./components/RetirementView";
 import { InteractiveSeasonView } from "./components/InteractiveSeasonView";
+import { SeoPagesView } from "./components/SeoPagesView";
 import { initializeActiveSeason } from "./lib/seasonGenerator";
 import { CelebrationModal, MultiTitleModal } from "./components/CelebrationModal";
 import { 
@@ -80,6 +81,16 @@ export default function App() {
   const [authReady, setAuthReady] = useState<boolean>(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [authBusy, setAuthBusy] = useState<boolean>(false);
+
+  const [currentPath, setCurrentPath] = useState<string>(typeof window !== "undefined" ? window.location.pathname : "/");
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setCurrentPath(window.location.pathname);
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
 
   const [careerState, setCareerState] = useState<CareerState | null>(null);
   const [inInteractiveMode, setInInteractiveMode] = useState<boolean>(false);
@@ -1667,6 +1678,26 @@ export default function App() {
   };
 
   /* ---------------------- Render Views ---------------------- */
+  const isSeoPage = 
+    currentPath.includes("simulador-carrera-futbolistica") || 
+    currentPath.includes("como-funciona") || 
+    currentPath.includes("football-career-simulator");
+
+  if (isSeoPage) {
+    return (
+      <div>
+        <div className="stripe-field"></div>
+        <SeoPagesView
+          pagePath={currentPath}
+          onNavigateHome={() => {
+            window.history.pushState({}, "", "/");
+            setCurrentPath("/");
+          }}
+        />
+      </div>
+    );
+  }
+
   if (!authReady) {
     return (
       <div className="auth-loading">

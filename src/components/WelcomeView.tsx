@@ -11,6 +11,7 @@ import {
   calculateRealisticMarketValue,
   calculateRealisticSalary
 } from "../data/clubsAndLeagues";
+import { SeoInfoSection } from "./SeoInfoSection";
 
 interface WelcomeViewProps {
   existingGame: CareerState | null;
@@ -103,17 +104,17 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
 
   return (
     <div>
-      <div className="hero">
+      <header className="hero">
         <div className="field-mark"></div>
         <img 
           src={appIconImg} 
-          alt="Footcarrer Logo" 
+          alt="FootCarrer - Simulador de Carrera Futbolística" 
           style={{ width: "80px", height: "80px", borderRadius: "18px", objectFit: "cover", margin: "0 auto 12px", border: "2px solid var(--gold)", boxShadow: "0 4px 20px rgba(232, 184, 75, 0.25)" }} 
         />
-        <div className="eyebrow">Simulador de carrera · edición 2026</div>
-        <h1>Footcarrer</h1>
-        <p className="sub">Crea tu futbolista. Juega temporada a temporada. Que decida la suerte.</p>
-      </div>
+        <div className="eyebrow">Simulador de Carrera Futbolística · Edición 2026</div>
+        <h1>Football Career Simulator</h1>
+        <p className="sub">Crea tu futbolista, ficha por clubes históricos, supera temporadas y conviértete en leyenda del fútbol.</p>
+      </header>
 
       {existingGame && !existingGame.player.retired && (
         <div className="card">
@@ -200,6 +201,9 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
           EMPEZAR CARRERA
         </button>
       </div>
+
+      {/* Sección Informativa Completa para SEO y Guía de Jugadores */}
+      <SeoInfoSection />
     </div>
   );
 };

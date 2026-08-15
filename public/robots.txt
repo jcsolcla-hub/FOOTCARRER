@@ -1,0 +1,9 @@
+# Robots.txt for FootCarrer - Football Career Simulator
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /private/
+
+# Sitemap location
+Sitemap: https://footcarrer.com/sitemap.xml
