@@ -1698,21 +1698,12 @@ export default function App() {
     );
   }
 
-  if (!authReady) {
-    return (
-      <div className="auth-loading">
-        <div className="luck-spinner" style={{ margin: "0 auto 14px" }}></div>
-        Cargando Footcarrer…
-      </div>
-    );
-  }
-
   if (!currentUser) {
     return (
       <LoginView
         currentUser={currentUser}
         authError={authError}
-        authBusy={authBusy}
+        authBusy={authBusy || !authReady}
         onClearError={() => setAuthError(null)}
         showToast={showToast}
       />

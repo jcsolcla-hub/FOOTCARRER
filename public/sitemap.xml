@@ -2,25 +2,25 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://footcarrer.com/</loc>
+    <loc>https://footcarrer.vercel.app/</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://footcarrer.com/simulador-carrera-futbolistica</loc>
+    <loc>https://footcarrer.vercel.app/simulador-carrera-futbolistica</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://footcarrer.com/como-funciona</loc>
+    <loc>https://footcarrer.vercel.app/como-funciona</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://footcarrer.com/football-career-simulator</loc>
+    <loc>https://footcarrer.vercel.app/football-career-simulator</loc>
     <lastmod>2026-08-15</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>

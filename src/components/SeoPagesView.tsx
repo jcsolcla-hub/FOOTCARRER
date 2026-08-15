@@ -31,7 +31,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           onClick={onNavigateHome}
           className="btn btn-ghost text-xs px-3.5 py-2 flex items-center gap-2 text-[var(--chalk)] hover:text-[var(--gold)]"
         >
-          <ArrowLeft className="w-4 h-4" /> Volver al Simulador
+          <ArrowLeft className="w-4 h-4" /> Volver a Food Career
         </button>
         <button 
           onClick={onNavigateHome}
@@ -45,15 +45,15 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
       <header className="mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center sm:items-start gap-5">
         <img 
           src={appIconImg} 
-          alt="FootCarrer Logo" 
+          alt="Food Career Logo" 
           className="w-20 h-20 rounded-2xl border-2 border-[var(--gold)] object-cover shadow-lg shrink-0"
         />
         <div>
-          <div className="eyebrow mb-1">FootCarrer · Documentación y Guía Oficial</div>
+          <div className="eyebrow mb-1">Food Career · Juego de fútbol online · Guía Oficial</div>
           {isSimuladorGuia && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                Simulador de Carrera Futbolística: La Guía Definitiva
+                Food Career: Guía Oficial del Juego de Fútbol Online
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Descubre cómo forjar una trayectoria de leyenda en el juego de carrera de futbolista más completo y realista.
@@ -64,7 +64,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           {isComoFunciona && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                ¿Cómo Funciona el Simulador de Fútbol FootCarrer?
+                ¿Cómo Funciona el Simulador de Fútbol Food Career?
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Explicación paso a paso de las mecánicas de temporadas, valoraciones OVR, contratos y decisiones clave.
@@ -75,7 +75,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           {isEnglishGuide && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                Football Career Simulator: Complete Play Guide & Mechanics
+                Food Career – Online Football Career Game: Complete Guide
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Create your custom football player, simulate real seasons, sign with top European clubs, and win the Ballon d'Or.
@@ -94,10 +94,10 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
               ¿Qué hace especial a este simulador de carrera de futbolista?
             </h2>
             <p>
-              El <strong>simulador de carrera futbolística FootCarrer</strong> te permite ponerte en las botas de una joven promesa del fútbol mundial. A diferencia de otros juegos de gestión en los que diriges a todo el club, aquí el foco está 100% en tu propio futbolista profesional: su desarrollo físico, sus goles, sus títulos y su legado histórico.
+              El <strong>simulador de carrera futbolística Football Career</strong> te permite ponerte en las botas de una joven promesa del fútbol mundial. A diferencia de otros juegos de gestión en los que diriges a todo el club, aquí el foco está 100% en tu propio futbolista profesional: su desarrollo físico, sus goles, sus títulos y su legado histórico.
             </p>
             <p>
-              Desde ligas menores hasta levantar la UEFA Champions League y la Copa del Mundo con tu Selección Nacional, cada decisión define si serás un jugador más o una leyenda que compite por el Balón de Oro.
+              Desde ligas menores hasta levantar la UEFA Champions League y la Copa del Mundo con tu Selección Nacional, cada decisión define si serás un jugador más o una leyenda que compite por el Balón de Oro en este <strong>juego de fútbol online</strong>.
             </p>
           </article>
 
@@ -191,13 +191,13 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           <article className="p-6 rounded-2xl bg-[var(--panel)] border border-[var(--line)] space-y-3">
             <h2 className="text-xl font-bold text-[var(--chalk)] flex items-center gap-2">
               <Globe className="w-5 h-5 text-[var(--gold)]" />
-              About FootCarrer - The Ultimate Football Career Game
+              About Football Career - The Ultimate Online Football Career Game
             </h2>
             <p>
-              <strong>FootCarrer</strong> is an online <em>football career simulator</em> built for soccer fans worldwide. Experience every stage of a professional player's journey from a teenage debutant to a retired hall-of-fame legend.
+              <strong>Football Career</strong> is an online <em>football career simulator</em> built for soccer fans worldwide. Experience every stage of a professional player's journey from a teenage debutant to a retired hall-of-fame legend.
             </p>
             <p>
-              Navigate real transfer markets, manage press conferences, compete in top European leagues like Premier League, LaLiga, Serie A, and Bundesliga, and lead your national squad in the World Cup.
+              Navigate real transfer markets, manage press conferences, compete in top European leagues like Premier League, LaLiga, Serie A, and Bundesliga, and lead your national squad in the World Cup in this ultimate online football career game.
             </p>
           </article>
 

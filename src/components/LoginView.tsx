@@ -114,13 +114,13 @@ export const LoginView: React.FC<LoginViewProps> = ({
         <div className="field-mark"></div>
         <img 
           src={appIconImg} 
-          alt="FootCarrer - Football Career Simulator Logo" 
+          alt="Football Career – Juego de fútbol online" 
           style={{ width: "72px", height: "72px", borderRadius: "16px", objectFit: "cover", margin: "0 auto 10px", border: "2px solid var(--gold)", boxShadow: "0 4px 18px rgba(232, 184, 75, 0.22)" }} 
         />
         <div className="eyebrow">Simulador de Carrera Futbolística · Edición 2026</div>
-        <h1>Football Career Simulator</h1>
+        <h1>Football Career – Juego de fútbol online</h1>
         <p className="sub" style={{ fontSize: "13px", marginTop: "4px", color: "var(--muted)" }}>
-          Simula tu carrera futbolística, ficha por los mejores clubes y conviértete en leyenda.
+          Simula tu carrera futbolística, ficha por los mejores clubes y conviértete en leyenda en este juego de fútbol online.
         </p>
       </header>
       <div className="card">
