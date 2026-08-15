@@ -216,7 +216,7 @@ export interface PressOption {
 
 export interface PressQuestion {
   id: string;
-  category: "Prensa" | "Vestuario" | "Patrocinio" | "Afición" | "Mercado" | "Entrevista" | "Gestión" | "Finanzas" | "Equipación" | "Staff" | "Agente" | "Inversiones";
+  category: "Prensa" | "Vestuario" | "Patrocinio" | "Afición" | "Mercado" | "Entrevista" | "Gestión" | "Finanzas" | "Equipación" | "Staff" | "Agente" | "Inversiones" | "Factores Externos" | "Factor Externo" | "Clima" | "Polémica";
   question: string;
   reporter?: string;
   options: PressOption[];

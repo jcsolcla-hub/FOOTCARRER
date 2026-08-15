@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import appIconImg from "../assets/images/footcarrer_app_icon_1786368472328.jpg";
 import { CareerState } from "../types";
+import { MessageCircle, Share2, Copy, Check } from "lucide-react";
 import { 
   POS_NAMES, 
   MASTER_TROPHIES, 
@@ -53,6 +54,37 @@ export const RetirementView: React.FC<RetirementViewProps> = ({
     RATING_TIERS[RATING_TIERS.length - 1];
 
   const peakOvr = Math.max(p.maxLevel || 0, Math.round(p.level), p.bestSeason?.peakLevelInSeason || 0);
+
+  const [copied, setCopied] = useState(false);
+  const shareUrl = "https://footcarrer.vercel.app/";
+
+  const resultsSummaryText = `⚽ ¡He completado mi carrera en Footcareer!\n\n👤 Jugador: ${p.name} (${POS_NAMES[p.position]} · ${p.nationality})\n⚡ Media Prime: ${peakOvr} OVR\n👑 Estatus: ${rating.label}\n🏆 Títulos: ${p.titles} | 🌟 Balones de Oro: ${p.ballonsDor} | 👟 Botas de Oro: ${p.goldenBoots}\n⚽ Goles: ${p.goals} | 🎯 Asistencias: ${p.assists} | 🏟️ Partidos: ${p.matches}\n💰 Fortuna ganada: ${fmtMoney(p.totalMoneyEarned)}\n👕 Clubes (${p.clubsHistory.length}): ${p.clubsHistory.slice(0, 4).join(" ➔ ")}${p.clubsHistory.length > 4 ? "..." : ""}\n\n¡Crea tu propia carrera futbolística y compite gratis!\n👉 ${shareUrl}`;
+
+  const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(resultsSummaryText)}`;
+
+  const handleNativeShare = async () => {
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: `Resultados de Carrera de ${p.name} · Footcareer`,
+          text: resultsSummaryText,
+          url: shareUrl,
+        });
+      } catch {
+        // Fallback
+      }
+    } else {
+      handleCopyResults();
+    }
+  };
+
+  const handleCopyResults = () => {
+    if (typeof navigator !== "undefined" && navigator.clipboard) {
+      navigator.clipboard.writeText(resultsSummaryText);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2500);
+    }
+  };
 
   const dynamicExtra = Object.keys(p.trophiesList).filter(
     (n) => !MASTER_TROPHIES.some((m) => m.name === n)
@@ -311,6 +343,130 @@ export const RetirementView: React.FC<RetirementViewProps> = ({
               <div className="timeline-text">{ev.text}</div>
             </div>
           ))}
+        </div>
+      </div>
+
+      {/* SECCIÓN COMPARTIR RESULTADOS DE CARRERA EN WHATSAPP */}
+      <div 
+        className="card" 
+        style={{
+          background: "linear-gradient(135deg, rgba(37, 211, 102, 0.1) 0%, rgba(20, 24, 33, 0.95) 100%)",
+          border: "1.5px solid #25D366",
+          boxShadow: "0 8px 30px rgba(37, 211, 102, 0.15)",
+          textAlign: "left"
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "12px", flexWrap: "wrap", gap: "8px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <div style={{ background: "#25D366", color: "#ffffff", padding: "8px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <MessageCircle size={22} />
+            </div>
+            <div>
+              <div className="eyebrow" style={{ color: "#25D366", margin: 0, fontWeight: 800 }}>RESULTADOS OFICIALES</div>
+              <h3 style={{ margin: 0, fontSize: "18px", color: "#ffffff" }}>Comparte tu Carrera con Amigos</h3>
+            </div>
+          </div>
+          <span style={{ fontSize: "12px", color: "var(--muted)", fontWeight: 600 }}>
+            {p.name} · {p.season - 1} Temporadas
+          </span>
+        </div>
+
+        <p style={{ fontSize: "13px", color: "var(--muted)", marginBottom: "14px", lineHeight: 1.45 }}>
+          Envía un resumen completo de tus logros, goles, títulos, Balones de Oro y dinero ganado a tus amigos por WhatsApp o redes para retarlos a superar tu leyenda deportiva.
+        </p>
+
+        {/* Previsualización del mensaje */}
+        <div 
+          style={{
+            background: "rgba(0, 0, 0, 0.35)",
+            border: "1px dashed rgba(37, 211, 102, 0.4)",
+            borderRadius: "10px",
+            padding: "12px 14px",
+            fontSize: "12.5px",
+            lineHeight: 1.5,
+            color: "#e2e8f0",
+            whiteSpace: "pre-line",
+            marginBottom: "14px",
+            fontFamily: "monospace"
+          }}
+        >
+          {resultsSummaryText}
+        </div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+          <a
+            href={whatsappShareUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-primary"
+            style={{
+              background: "#25D366",
+              color: "#ffffff",
+              fontWeight: 800,
+              flex: "1 1 200px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "8px",
+              padding: "12px 16px",
+              boxShadow: "0 4px 16px rgba(37, 211, 102, 0.3)",
+              border: "none",
+              textDecoration: "none"
+            }}
+            title="Enviar resultados de carrera por WhatsApp"
+          >
+            <MessageCircle size={18} />
+            <span>Enviar Resultados a WhatsApp</span>
+          </a>
+
+          {typeof navigator !== "undefined" && "share" in navigator && (
+            <button
+              type="button"
+              onClick={handleNativeShare}
+              className="btn btn-ghost"
+              style={{
+                flex: "1 1 140px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: "6px",
+                padding: "12px 14px",
+                border: "1px solid rgba(255, 255, 255, 0.15)"
+              }}
+              title="Compartir mediante el menú del sistema"
+            >
+              <Share2 size={16} />
+              <span>Compartir</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={handleCopyResults}
+            className="btn btn-ghost"
+            style={{
+              flex: "1 1 140px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: "6px",
+              padding: "12px 14px",
+              border: "1px solid rgba(255, 255, 255, 0.15)"
+            }}
+            title="Copiar texto de resultados al portapapeles"
+          >
+            {copied ? (
+              <>
+                <Check size={16} color="var(--ok)" />
+                <span style={{ color: "var(--ok)", fontWeight: 700 }}>¡Copiado!</span>
+              </>
+            ) : (
+              <>
+                <Copy size={16} />
+                <span>Copiar Resultados</span>
+              </>
+            )}
+          </button>
         </div>
       </div>
 

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import appIconImg from "../assets/images/footcarrer_app_icon_1786368472328.jpg";
 import { User } from "firebase/auth";
+import { MessageCircle } from "lucide-react";
 import { 
   doGoogleLogin, 
   doAppleLogin, 
@@ -114,11 +115,11 @@ export const LoginView: React.FC<LoginViewProps> = ({
         <div className="field-mark"></div>
         <img 
           src={appIconImg} 
-          alt="Football Career – Juego de fútbol online" 
+          alt="Footcareer – Juego de fútbol online" 
           style={{ width: "72px", height: "72px", borderRadius: "16px", objectFit: "cover", margin: "0 auto 10px", border: "2px solid var(--gold)", boxShadow: "0 4px 18px rgba(232, 184, 75, 0.22)" }} 
         />
         <div className="eyebrow">Simulador de Carrera Futbolística · Edición 2026</div>
-        <h1>Football Career – Juego de fútbol online</h1>
+        <h1>Footcareer – Juego de fútbol online</h1>
         <p className="sub" style={{ fontSize: "13px", marginTop: "4px", color: "var(--muted)" }}>
           Simula tu carrera futbolística, ficha por los mejores clubes y conviértete en leyenda en este juego de fútbol online.
         </p>
@@ -186,6 +187,33 @@ export const LoginView: React.FC<LoginViewProps> = ({
           )}
           <span>{activeProvider === "guest" ? "Entrando como invitado..." : "Continuar como invitado"}</span>
         </button>
+
+        {/* Compartir por WhatsApp antes de iniciar sesión */}
+        <a
+          href={`https://api.whatsapp.com/send?text=${encodeURIComponent("⚽ ¡Prueba Footcarrer! Crea tu carrera futbolística y compite con jugadores y equipos de diferentes épocas.\nhttps://footcarrer.vercel.app/")}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="btn-social"
+          style={{
+            background: "#25D366",
+            color: "#ffffff",
+            fontWeight: 700,
+            textDecoration: "none",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "8px",
+            marginTop: "10px",
+            border: "none",
+            boxShadow: "0 4px 14px rgba(37, 211, 102, 0.22)"
+          }}
+          title="Compartir Footcareer por WhatsApp con amigos"
+        >
+          <span className="ico" style={{ display: "flex", alignItems: "center" }}>
+            <MessageCircle size={19} />
+          </span>
+          <span>Compartir en WhatsApp con amigos</span>
+        </a>
 
         <div className="auth-divider">o mediante email</div>
 

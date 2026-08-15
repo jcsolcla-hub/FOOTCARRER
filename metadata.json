@@ -1,6 +1,6 @@
 {
-  "name": "Football Career",
-  "description": "Football Career – Juego de fútbol online. Simulador de carrera de fútbol profesional con gestión de clubes, selecciones, torneos, trofeos y persistencia en Firebase.",
+  "name": "Footcareer",
+  "description": "Footcareer – Juego de fútbol online. Simulador de carrera de fútbol profesional con gestión de clubes, selecciones, torneos, trofeos y persistencia en Firebase.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

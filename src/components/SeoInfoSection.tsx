@@ -28,12 +28,12 @@ export const SeoInfoSection: React.FC = () => {
 
   return (
     <section 
-      aria-label="Guía oficial de Football Career"
+      aria-label="Guía oficial de Footcareer"
       className="mt-10 border-t border-[var(--line)] pt-8 pb-6 text-left"
     >
       {/* Barra de Navegación Interna para Usuarios y Rastreadores con Múltiples Enlaces */}
       <nav 
-        aria-label="Navegación de secciones de Football Career"
+        aria-label="Navegación de secciones de Footcareer"
         className="p-3.5 mb-6 rounded-xl bg-[var(--panel)] border border-[var(--line)] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs"
       >
         <span className="font-bold text-[var(--chalk)] flex items-center gap-1.5 shrink-0">
@@ -41,11 +41,11 @@ export const SeoInfoSection: React.FC = () => {
         </span>
         <div className="flex flex-wrap items-center gap-3 text-[var(--muted)]">
           <a 
-            href="#que-es-football-career" 
-            onClick={(e) => { e.preventDefault(); scrollToSection("que-es-football-career"); }}
+            href="#que-es-footcareer" 
+            onClick={(e) => { e.preventDefault(); scrollToSection("que-es-footcareer"); }}
             className="hover:text-[var(--gold)] transition-colors underline"
           >
-            ¿Qué es Football Career?
+            ¿Qué es Footcareer?
           </a>
           <a 
             href="#como-se-juega" 
@@ -80,7 +80,7 @@ export const SeoInfoSection: React.FC = () => {
             onClick={(e) => { e.preventDefault(); scrollToSection("empieza-a-jugar"); }}
             className="text-[var(--gold)] font-semibold hover:underline flex items-center gap-1"
           >
-            <Play className="w-3 h-3 fill-current" /> Jugar a Football Career
+            <Play className="w-3.5 h-3.5 fill-current" /> Jugar a Footcareer
           </a>
         </div>
       </nav>
@@ -92,7 +92,7 @@ export const SeoInfoSection: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5 text-[var(--gold)]" /> Información y Reglas
           </span>
           <h2 className="text-xl font-bold text-[var(--chalk)]">
-            Football Career: El juego de fútbol online y simulador de carrera definitivo
+            Footcareer: El juego de fútbol online y simulador de carrera definitivo
           </h2>
           <p className="text-xs text-[var(--muted)] mt-1">
             Conoce todas las mecánicas de este juego de fútbol online, las posiciones de jugadores, ligas, traspasos y cómo ganar el Balón de Oro.
@@ -126,7 +126,7 @@ export const SeoInfoSection: React.FC = () => {
             <h3 className="text-sm font-bold text-[var(--chalk)]">Crea a tu Futbolista</h3>
           </div>
           <p className="text-xs text-[var(--muted)] leading-relaxed mb-3">
-            Elige tu posición favorita, nacionalidad y club inicial para arrancar tu trayectoria deportiva en Football Career.
+            Elige tu posición favorita, nacionalidad y club inicial para arrancar tu trayectoria deportiva en Footcareer.
           </p>
           <a 
             href="#posiciones-detalle"
@@ -150,7 +150,7 @@ export const SeoInfoSection: React.FC = () => {
             onClick={(e) => { e.preventDefault(); scrollToSection("como-se-juega"); }}
             className="text-xs text-[var(--ok)] font-medium hover:underline inline-flex items-center gap-1"
           >
-            Cómo jugar a Football Career &rarr;
+            Cómo jugar a Footcareer &rarr;
           </a>
         </div>
 
@@ -175,14 +175,14 @@ export const SeoInfoSection: React.FC = () => {
       {/* Contenido Editorial Completo (350-500 palabras estructuradas con H2, H3 y párrafos <p>) */}
       <div className={`space-y-6 text-sm text-[var(--muted)] leading-relaxed transition-all duration-300 ${isExpanded ? "block" : "hidden md:block"}`}>
         
-        {/* SECCIÓN 1: ¿Qué es Football Career? */}
-        <article id="que-es-football-career" className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] space-y-3">
+        {/* SECCIÓN 1: ¿Qué es Footcareer? */}
+        <article id="que-es-footcareer" className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] space-y-3">
           <h2 className="text-lg font-bold text-[var(--chalk)] flex items-center gap-2">
             <HelpCircle className="w-5 h-5 text-[var(--gold)]" />
-            ¿Qué es Football Career?
+            ¿Qué es Footcareer?
           </h2>
           <p>
-            <strong>Football Career</strong> es un emocionante <em>juego de fútbol online</em> y simulador interactivo gratuito que te permite vivir en primera persona toda la trayectoria de un futbolista profesional. Desde tu debut en categorías juveniles con 16 años hasta tu retirada convertida en leyenda del deporte rey, cada año representa una temporada completa cargada de desafíos deportivos, entrenamientos, partidos decisivos y negociaciones de fichajes.
+            <strong>Footcareer</strong> es un emocionante <em>juego de fútbol online</em> y simulador interactivo gratuito que te permite vivir en primera persona toda la trayectoria de un futbolista profesional. Desde tu debut en categorías juveniles con 16 años hasta tu retirada convertida en leyenda del deporte rey, cada año representa una temporada completa cargada de desafíos deportivos, entrenamientos, partidos decisivos y negociaciones de fichajes.
           </p>
           <p>
             A diferencia de los simuladores convencionales de banquillo donde diriges a la plantilla al completo, en este <strong>juego de fútbol online</strong> el protagonista absoluto eres tú: controlas tu progresión física, tu rendimiento goleador o defensivo, tus intervenciones en ruedas de prensa y tu reputación tanto a nivel de clubes como con la Selección Nacional.
@@ -196,7 +196,7 @@ export const SeoInfoSection: React.FC = () => {
             ¿Cómo se juega?
           </h2>
           <p>
-            Jugar a <strong>Football Career</strong> es muy intuitivo y accesible desde cualquier navegador web en ordenador, tablet o teléfono móvil. En este <em>juego de fútbol online</em> la carrera transcurre mediante un sistema anual de decisiones y simulación estadística avanzada:
+            Jugar a <strong>Footcareer</strong> es muy intuitivo y accesible desde cualquier navegador web en ordenador, tablet o teléfono móvil. En este <em>juego de fútbol online</em> la carrera transcurre mediante un sistema anual de decisiones y simulación estadística avanzada:
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
@@ -231,7 +231,7 @@ export const SeoInfoSection: React.FC = () => {
             Equipos, jugadores y temporadas
           </h2>
           <p>
-            La variedad y el realismo son los pilares centrales de la experiencia en <strong>Football Career</strong>:
+            La variedad y el realismo son los pilares centrales de la experiencia en <strong>Footcareer</strong>:
           </p>
 
           <div className="space-y-3 text-xs text-[var(--chalk)]">
@@ -271,7 +271,7 @@ export const SeoInfoSection: React.FC = () => {
             Empieza a jugar
           </h2>
           <p>
-            ¿Estás listo para escribir tu nombre con letras doradas en la historia del fútbol mundial? Dar tus primeros pasos en <strong>Football Career</strong> es 100% gratuito y no requiere descargas ni instalaciones en tu dispositivo:
+            ¿Estás listo para escribir tu nombre con letras doradas en la historia del fútbol mundial? Dar tus primeros pasos en <strong>Footcareer</strong> es 100% gratuito y no requiere descargas ni instalaciones en tu dispositivo:
           </p>
           <ol className="list-decimal pl-5 space-y-1.5 text-xs text-[var(--chalk)]">
             <li>Escribe el nombre de tu futbolista y selecciona tu país de origen.</li>
@@ -288,7 +288,7 @@ export const SeoInfoSection: React.FC = () => {
               }}
               className="btn btn-primary text-xs px-5 py-2.5 inline-flex items-center gap-2"
             >
-              <Play className="w-3.5 h-3.5 fill-current" /> Jugar a Football Career Ahora
+              <Play className="w-3.5 h-3.5 fill-current" /> Jugar a Footcareer Ahora
             </a>
             <a
               href="/simulador-carrera-futbolistica"
@@ -304,55 +304,87 @@ export const SeoInfoSection: React.FC = () => {
           </div>
         </article>
 
-        {/* SECCIÓN 5: Enlaces Externos y Referencias Oficiales del Fútbol */}
+        {/* SECCIÓN 5: Enlaces Externos y Referencias Oficiales del Fútbol (Factores Externos de SEO) */}
         <article className="p-5 rounded-2xl bg-[var(--panel)] border border-[var(--line)] space-y-3">
           <h2 className="text-base font-bold text-[var(--chalk)] flex items-center gap-2">
             <Globe className="w-4 h-4 text-[var(--gold)]" />
-            Organizaciones y Referencias Oficiales del Fútbol
+            Organizaciones y Referencias Oficiales del Fútbol Internacional
           </h2>
           <p className="text-xs text-[var(--muted)]">
-            Para los amantes de la táctica y la reglamentación que inspiran la simulación de <strong>Football Career</strong>, puedes consultar las fuentes y organismos oficiales del fútbol internacional:
+            Para los amantes de la táctica, la reglamentación internacional y los premios individuales que inspiran el sistema de simulación de <strong>Footcareer</strong>, puedes consultar las fuentes oficiales con máxima autoridad en el fútbol mundial:
           </p>
-          <div className="flex flex-wrap items-center gap-2 text-xs">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-xs">
             <a 
               href="https://www.fifa.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
             >
-              FIFA Oficial ↗
+              <span className="font-bold">FIFA Oficial ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Mundiales y Ranking</span>
             </a>
             <a 
               href="https://www.uefa.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
             >
-              UEFA Champions League ↗
+              <span className="font-bold">UEFA Champions League ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Competiciones Europeas</span>
+            </a>
+            <a 
+              href="https://www.theifab.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
+            >
+              <span className="font-bold">IFAB Oficial ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Reglas del Juego Oficiales</span>
+            </a>
+            <a 
+              href="https://www.francefootball.fr/ballon-d-or/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
+            >
+              <span className="font-bold">France Football ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Balón de Oro y Premios</span>
+            </a>
+            <a 
+              href="https://www.transfermarkt.es/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
+            >
+              <span className="font-bold">Transfermarkt ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Valores y Mercado de Fichajes</span>
             </a>
             <a 
               href="https://www.laliga.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
             >
-              LaLiga EA Sports ↗
+              <span className="font-bold">LaLiga EA Sports ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Fútbol Español Oficial</span>
             </a>
             <a 
               href="https://www.premierleague.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
             >
-              Premier League Oficial ↗
+              <span className="font-bold">Premier League ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Liga Inglesa Oficial</span>
             </a>
             <a 
-              href="https://es.wikipedia.org/wiki/Reglas_del_f%C3%BAtbol" 
+              href="https://www.conmebol.com/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors"
+              className="p-2.5 rounded-lg bg-[var(--panel-2)] border border-[var(--line)] text-[var(--gold)] hover:text-white transition-colors flex flex-col gap-0.5"
             >
-              Reglas del Fútbol (Wikipedia) ↗
+              <span className="font-bold">CONMEBOL ↗</span>
+              <span className="text-[10px] text-[var(--muted)]">Copa Libertadores y América</span>
             </a>
           </div>
         </article>
@@ -366,11 +398,11 @@ export const SeoInfoSection: React.FC = () => {
 
       {/* Enlaces Internos Footer */}
       <footer className="mt-6 pt-4 border-t border-[var(--line)] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[var(--muted)]">
-        <span>© {new Date().getFullYear()} Football Career – Juego de fútbol online</span>
+        <span>© {new Date().getFullYear()} Footcareer – Juego de fútbol online</span>
         <div className="flex flex-wrap items-center gap-4">
           <a 
-            href="#que-es-football-career"
-            onClick={(e) => { e.preventDefault(); scrollToSection("que-es-football-career"); }}
+            href="#que-es-footcareer"
+            onClick={(e) => { e.preventDefault(); scrollToSection("que-es-footcareer"); }}
             className="hover:text-[var(--gold)] transition-colors underline"
           >
             ¿Qué es?
@@ -413,7 +445,7 @@ export const SeoInfoSection: React.FC = () => {
             }}
             className="hover:text-[var(--gold)] transition-colors underline"
           >
-            Football Career Game (EN)
+            Footcareer Game (EN)
           </a>
         </div>
       </footer>

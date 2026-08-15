@@ -31,7 +31,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           onClick={onNavigateHome}
           className="btn btn-ghost text-xs px-3.5 py-2 flex items-center gap-2 text-[var(--chalk)] hover:text-[var(--gold)]"
         >
-          <ArrowLeft className="w-4 h-4" /> Volver a Food Career
+          <ArrowLeft className="w-4 h-4" /> Volver a Footcareer
         </button>
         <button 
           onClick={onNavigateHome}
@@ -45,15 +45,15 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
       <header className="mb-8 text-center sm:text-left flex flex-col sm:flex-row items-center sm:items-start gap-5">
         <img 
           src={appIconImg} 
-          alt="Food Career Logo" 
+          alt="Footcareer Logo" 
           className="w-20 h-20 rounded-2xl border-2 border-[var(--gold)] object-cover shadow-lg shrink-0"
         />
         <div>
-          <div className="eyebrow mb-1">Food Career · Juego de fútbol online · Guía Oficial</div>
+          <div className="eyebrow mb-1">Footcareer · Juego de fútbol online · Guía Oficial</div>
           {isSimuladorGuia && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                Food Career: Guía Oficial del Juego de Fútbol Online
+                Footcareer: Guía Oficial del Juego de Fútbol Online
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Descubre cómo forjar una trayectoria de leyenda en el juego de carrera de futbolista más completo y realista.
@@ -64,7 +64,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           {isComoFunciona && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                ¿Cómo Funciona el Simulador de Fútbol Food Career?
+                ¿Cómo Funciona el Simulador de Fútbol Footcareer?
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Explicación paso a paso de las mecánicas de temporadas, valoraciones OVR, contratos y decisiones clave.
@@ -75,7 +75,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
           {isEnglishGuide && (
             <>
               <h1 className="text-2xl sm:text-3xl font-black text-[var(--chalk)] leading-tight">
-                Food Career – Online Football Career Game: Complete Guide
+                Footcareer – Online Football Career Game: Complete Guide
               </h1>
               <p className="text-sm text-[var(--muted)] mt-2">
                 Create your custom football player, simulate real seasons, sign with top European clubs, and win the Ballon d'Or.
@@ -94,7 +94,7 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
               ¿Qué hace especial a este simulador de carrera de futbolista?
             </h2>
             <p>
-              El <strong>simulador de carrera futbolística Football Career</strong> te permite ponerte en las botas de una joven promesa del fútbol mundial. A diferencia de otros juegos de gestión en los que diriges a todo el club, aquí el foco está 100% en tu propio futbolista profesional: su desarrollo físico, sus goles, sus títulos y su legado histórico.
+              El <strong>simulador de carrera futbolística Footcareer</strong> te permite ponerte en las botas de una joven promesa del fútbol mundial. A diferencia de otros juegos de gestión en los que diriges a todo el club, aquí el foco está 100% en tu propio futbolista profesional: su desarrollo físico, sus goles, sus títulos y su legado histórico.
             </p>
             <p>
               Desde ligas menores hasta levantar la UEFA Champions League y la Copa del Mundo con tu Selección Nacional, cada decisión define si serás un jugador más o una leyenda que compite por el Balón de Oro en este <strong>juego de fútbol online</strong>.
@@ -236,6 +236,27 @@ export const SeoPagesView: React.FC<SeoPagesViewProps> = ({ pagePath, onNavigate
         >
           <Play className="w-4 h-4 fill-current" /> INICIAR CARRERA AHORA
         </button>
+      </div>
+
+      {/* ShareBar y Señales Externas */}
+      <div className="mt-8">
+        <div className="p-4 rounded-xl bg-[var(--panel)] border border-[var(--line)] flex flex-wrap items-center justify-between gap-3 text-xs">
+          <span className="text-[var(--muted)]">
+            Consulta organismos oficiales: 
+            <a href="https://www.fifa.com/" target="_blank" rel="noopener noreferrer" className="ml-1 text-[var(--gold)] hover:underline">FIFA</a> · 
+            <a href="https://www.uefa.com/" target="_blank" rel="noopener noreferrer" className="ml-1 text-[var(--gold)] hover:underline">UEFA</a> · 
+            <a href="https://www.theifab.com/" target="_blank" rel="noopener noreferrer" className="ml-1 text-[var(--gold)] hover:underline">IFAB</a> · 
+            <a href="https://www.francefootball.fr/ballon-d-or/" target="_blank" rel="noopener noreferrer" className="ml-1 text-[var(--gold)] hover:underline">France Football</a>
+          </span>
+          <a 
+            href={`https://api.whatsapp.com/send?text=${encodeURIComponent("⚽ ¡Juega a Footcareer! Crea tu futbolista y llega al Balón de Oro: https://footcarrer.vercel.app/")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-emerald-400 font-semibold hover:underline"
+          >
+            Compartir guía por WhatsApp ↗
+          </a>
+        </div>
       </div>
     </div>
   );

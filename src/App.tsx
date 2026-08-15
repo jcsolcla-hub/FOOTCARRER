@@ -71,7 +71,7 @@ import {
   LinkAccountModal,
   PressQuestionModal
 } from "./components/SeasonModals";
-import { getRandomPressQuestion, getRandomManagementQuestion } from "./data/pressQuestions";
+import { getRandomPressQuestion, getRandomManagementQuestion, getRandomExternalFactorQuestion } from "./data/pressQuestions";
 import { TrainingQuestionModal, CupFinalModal } from "./components/SeasonDecisionModals";
 
 const SAVE_KEY = "leyenda_career_save_v2";
@@ -1364,6 +1364,34 @@ export default function App() {
             }
             saveState(stateCopy);
             showToast(`💼 ${option.effectText}`);
+            next();
+          }
+        });
+      });
+    }
+
+    // Evento de Factor Externo (Clima, Polémicas, Redes, Crisis, Decisiones Extradeportivas)
+    if (randomChance(0.85)) {
+      queue.push((next) => {
+        const extFactorData = getRandomExternalFactorQuestion();
+        setPressQuestionModalData({
+          questionData: extFactorData,
+          onSelectOption: (option) => {
+            setPressQuestionModalData(null);
+            if (option.statBonus) {
+              if (option.statBonus.levelDelta) {
+                p.level = clamp(p.level + option.statBonus.levelDelta, 40, 99);
+              }
+              if (option.statBonus.moneyDelta) {
+                p.money = Math.round((p.money + option.statBonus.moneyDelta) * 10) / 10;
+                p.totalMoneyEarned += Math.max(0, option.statBonus.moneyDelta);
+              }
+              if (option.statBonus.scoreDelta) {
+                p.score += option.statBonus.scoreDelta;
+              }
+            }
+            saveState(stateCopy);
+            showToast(`⚡ Factor Externo: ${option.effectText}`);
             next();
           }
         });

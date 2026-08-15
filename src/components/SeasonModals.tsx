@@ -920,15 +920,32 @@ export const PressQuestionModal: React.FC<PressQuestionModalProps> = ({
   questionData,
   onSelectOption,
 }) => {
+  const isExternalFactor = questionData.category === "Factores Externos" || questionData.category === "Factor Externo";
+
   return (
     <div className="modal-backdrop" style={{ zIndex: 9999, background: "rgba(0, 0, 0, 0.88)", backdropFilter: "blur(6px)" }}>
-      <div className="modal" style={{ maxWidth: "520px", textAlign: "left" }}>
+      <div 
+        className="modal" 
+        style={{ 
+          maxWidth: "520px", 
+          textAlign: "left",
+          border: isExternalFactor ? "1.5px solid rgba(232, 184, 75, 0.7)" : undefined,
+          boxShadow: isExternalFactor ? "0 10px 40px rgba(232, 184, 75, 0.2)" : undefined
+        }}
+      >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "8px" }}>
-          <div className="eyebrow" style={{ margin: 0 }}>
-            🎙️ {questionData.category.toUpperCase()} · ZONA MIXTA
+          <div 
+            className="eyebrow" 
+            style={{ 
+              margin: 0, 
+              color: isExternalFactor ? "var(--gold)" : undefined,
+              fontWeight: 800
+            }}
+          >
+            {isExternalFactor ? "⚡ FACTOR EXTERNO · EVENTO DE TEMPORADA" : `🎙️ ${questionData.category.toUpperCase()} · ZONA MIXTA`}
           </div>
           {questionData.reporter && (
-            <span style={{ fontSize: "11px", color: "var(--muted)", fontWeight: 600 }}>
+            <span style={{ fontSize: "11px", color: isExternalFactor ? "var(--gold)" : "var(--muted)", fontWeight: 600 }}>
               {questionData.reporter}
             </span>
           )}
@@ -939,7 +956,7 @@ export const PressQuestionModal: React.FC<PressQuestionModalProps> = ({
         </h2>
 
         <p style={{ fontSize: "13px", color: "var(--muted)", marginBottom: "14px" }}>
-          Elige la respuesta de tu futbolista:
+          {isExternalFactor ? "Decide cómo afronta tu futbolista esta situación externa:" : "Elige la respuesta de tu futbolista:"}
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
@@ -958,7 +975,7 @@ export const PressQuestionModal: React.FC<PressQuestionModalProps> = ({
                 flexDirection: "column",
                 gap: "4px",
                 border: "1px solid rgba(255,255,255,0.12)",
-                background: "rgba(255,255,255,0.03)",
+                background: isExternalFactor ? "rgba(232, 184, 75, 0.05)" : "rgba(255,255,255,0.03)",
                 cursor: "pointer",
                 transition: "all 0.15s ease"
               }}

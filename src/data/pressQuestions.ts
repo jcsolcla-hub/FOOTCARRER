@@ -329,6 +329,173 @@ export const MANAGEMENT_QUESTIONS: PressQuestion[] = [
   }
 ];
 
+export const EXTERNAL_FACTORS_QUESTIONS: PressQuestion[] = [
+  {
+    id: "ext_01",
+    category: "Factores Externos",
+    reporter: "Condiciones Climatológicas Extremas",
+    question: "Factor Externo · Temporal de Lluvia y Césped Embarrado: El partido decisivo de la temporada se disputa bajo un diluvio torrencial con el césped impracticable y charcos en las áreas.",
+    options: [
+      {
+        text: "Adaptar tu juego: disparar desde lejos y presionar al fallo rival.",
+        effectText: "Tu lectura táctica bajo el temporal desatasca el encuentro (+1 Nivel OVR / +30 PTS Leyenda).",
+        statBonus: { levelDelta: 1, scoreDelta: 30 }
+      },
+      {
+        text: "Cambiar tacos de bota y jugar con máxima precaución física.",
+        effectText: "Evitas lesiones musculares y completas los 90 minutos con solidez.",
+        statBonus: { scoreDelta: 15 }
+      },
+      {
+        text: "Asumir la batuta del equipo y pedir balones al espacio aéreo.",
+        effectText: "Tu liderazgo épico bajo la lluvia enfervoriza a la grada (+40 PTS Leyenda).",
+        statBonus: { scoreDelta: 40 }
+      }
+    ]
+  },
+  {
+    id: "ext_02",
+    category: "Factores Externos",
+    reporter: "Redes Sociales y Prensa Rosa",
+    question: "Factor Externo · Polémica Viral en Redes: Se filtran unas imágenes tuyas en una fiesta privada de cumpleaños 48 horas antes de un encuentro importante. Los programas de televisión abren debate sobre tu compromiso.",
+    options: [
+      {
+        text: "Emitir un comunicado disculpándote y donar una prima a la fundación del club.",
+        effectText: "Zanjas la polémica con madurez y devuelves la calma al club (+35 PTS Leyenda).",
+        statBonus: { scoreDelta: 35, moneyDelta: -0.2 }
+      },
+      {
+        text: "Callar y responder con un partidazo y un golazo sobre el terreno de juego.",
+        effectText: "Tu carácter ganador silencia todas las críticas (+1.5 Nivel OVR).",
+        statBonus: { levelDelta: 1.5, scoreDelta: 25 }
+      },
+      {
+        text: "Criticar la invasión a la privacidad de tu vida privada en tus redes.",
+        effectText: "Aumentas tus seguidores e impacto mediático (+1 M€ de patrocinios).",
+        statBonus: { moneyDelta: 1, scoreDelta: 10 }
+      }
+    ]
+  },
+  {
+    id: "ext_03",
+    category: "Factores Externos",
+    reporter: "Crisis Institucional del Club",
+    question: "Factor Externo · Destitución Fulminante del Entrenador: Tras tres derrotas consecutivas, la directiva echa al míster y ficha a un técnico estricto y exigente con doble sesión diaria obligatoria.",
+    options: [
+      {
+        text: "Entrenar al 120% para ganarte la titularidad indiscutible con el nuevo míster.",
+        effectText: "El nuevo entrenador te convierte en el eje del nuevo esquema táctico (+1.5 Nivel OVR).",
+        statBonus: { levelDelta: 1.5, scoreDelta: 35 }
+      },
+      {
+        text: "Ejercer de capitán y unir al vestuario en torno al proyecto.",
+        effectText: "Consolidarás el respeto absoluto del grupo y de la directiva (+50 PTS Leyenda).",
+        statBonus: { scoreDelta: 50 }
+      },
+      {
+        text: "Pedir a tu representante que sondee ofertas de salida en el mercado.",
+        effectText: "Despiertas el interés de grandes clubes europeos (+1 M€ valor).",
+        statBonus: { scoreDelta: 20 }
+      }
+    ]
+  },
+  {
+    id: "ext_04",
+    category: "Factores Externos",
+    reporter: "Mercado Internacional de Petrodólares",
+    question: "Factor Externo · Ofertón Mareante de Arabia Saudí: Un emisario del fútbol árabe te ofrece multiplicar por cinco tu salario con una prima de fichaje inmediata de 15 M€.",
+    options: [
+      {
+        text: "Rechazar la oferta: 'Mi sueño es competir por la Champions y ganar trofeos en Europa'.",
+        effectText: "La afición te corona como un héroe de lealtad deportiva (+60 PTS Leyenda / +1 Nivel OVR).",
+        statBonus: { scoreDelta: 60, levelDelta: 1 }
+      },
+      {
+        text: "Utilizar el interés saudí para renovar al alza con tu club actual.",
+        effectText: "Logras una mejora sustancial en tu contrato profesional (+3 M€).",
+        statBonus: { moneyDelta: 3, scoreDelta: 25 }
+      },
+      {
+        text: "Aceptar el multimillonario contrato y asegurar el futuro de tu familia.",
+        effectText: "Multiplicas exponencialmente tu fortuna personal (+10 M€).",
+        statBonus: { moneyDelta: 10, scoreDelta: 15 }
+      }
+    ]
+  },
+  {
+    id: "ext_05",
+    category: "Factores Externos",
+    reporter: "Comité Arbitral y Polémica VAR",
+    question: "Factor Externo · Escándalo Arbitral en el Descuento: En el minuto 94 te anulan un gol totalmente legal por un fuera de juego milimétrico revisado por el VAR que os cuesta el liderato.",
+    options: [
+      {
+        text: "Mantener la elegancia en zona mixta: 'Los árbitros aciertan y fallan; debemos mejorar nosotros'.",
+        effectText: "Recibes el premio Fair Play de la federación (+45 PTS Leyenda).",
+        statBonus: { scoreDelta: 45 }
+      },
+      {
+        text: "Expresar tu rabia constructiva y jurar revancha en la siguiente jornada.",
+        effectText: "Tu motivación por las nubes se traduce en rabia competitiva (+1.5 Nivel OVR).",
+        statBonus: { levelDelta: 1.5, scoreDelta: 20 }
+      }
+    ]
+  },
+  {
+    id: "ext_06",
+    category: "Factores Externos",
+    reporter: "Hinchada Rival y Ambiente Hostil",
+    question: "Factor Externo · Noche Hostil en el Hotel de Concentración: Aficionados del eterno rival acuden a medianoche con bengalas, petardos y cánticos frente al hotel para impedir el descanso del equipo.",
+    options: [
+      {
+        text: "Usar tapones, realizar meditación guiada y descansar con máxima concentración.",
+        effectText: "Llegas fresco al partido y rindes a un nivel físico estratosférico (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 25 }
+      },
+      {
+        text: "Asomarte a la ventana con una sonrisa retadora que caldea el derbi.",
+        effectText: "Te conviertes en la pesadilla de la afición contraria (+35 PTS Leyenda).",
+        statBonus: { scoreDelta: 35 }
+      }
+    ]
+  },
+  {
+    id: "ext_07",
+    category: "Factores Externos",
+    reporter: "Parón Internacional y Jet Lag",
+    question: "Factor Externo · Vuelo Trasatlántico Agotador: Regresas de jugar dos partidos de clasificación mundialista con tu Selección con un vuelo de 13 horas que llega el mismo día del partido de liga.",
+    options: [
+      {
+        text: "Pedir jugar de inicio a pesar del cansancio: 'Por este club juego sin dormir'.",
+        effectText: "Tu entrega descomunal conmueve al entrenador y a la grada (+40 PTS Leyenda).",
+        statBonus: { scoreDelta: 40 }
+      },
+      {
+        text: "Hacer sesión de crioterapia e iniciar en el banquillo como revulsivo en el segundo tiempo.",
+        effectText: "Entras fresco en el minuto 60 y revolucionas el partido con tu talento (+1 Nivel OVR).",
+        statBonus: { levelDelta: 1, scoreDelta: 30 }
+      }
+    ]
+  },
+  {
+    id: "ext_08",
+    category: "Factores Externos",
+    reporter: "Vida Personal y Familia",
+    question: "Factor Externo · Nacimiento y Vida Familiar: La noche previa a una semifinal europea nace tu hijo/a o se celebra un evento familiar crucial e inolvidable.",
+    options: [
+      {
+        text: "Dedicar el partido a tu familia y salir al césped con una motivación celestial.",
+        effectText: "Firmas una de las actuaciones más emotivas y mágicas de tu vida (+2 Nivel OVR / +50 PTS Leyenda).",
+        statBonus: { levelDelta: 2, scoreDelta: 50 }
+      },
+      {
+        text: "Celebrarlo con la afición luciendo un mensaje especial bajo la camiseta.",
+        effectText: "Creas una de las fotos icónicas de la historia del torneo (+40 PTS Leyenda).",
+        statBonus: { scoreDelta: 40 }
+      }
+    ]
+  }
+];
+
 export function getRandomPressQuestion(): PressQuestion {
   const index = Math.floor(Math.random() * PRESS_QUESTIONS.length);
   return PRESS_QUESTIONS[index];
@@ -338,3 +505,9 @@ export function getRandomManagementQuestion(): PressQuestion {
   const index = Math.floor(Math.random() * MANAGEMENT_QUESTIONS.length);
   return MANAGEMENT_QUESTIONS[index];
 }
+
+export function getRandomExternalFactorQuestion(): PressQuestion {
+  const index = Math.floor(Math.random() * EXTERNAL_FACTORS_QUESTIONS.length);
+  return EXTERNAL_FACTORS_QUESTIONS[index];
+}
+
