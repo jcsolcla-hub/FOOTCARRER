@@ -1,5 +1,5 @@
 import React from "react";
-import appIconImg from "../assets/images/footcarrer_app_icon_1786368472328.jpg";
+import appIconImg from "../assets/images/footcarrer_favicon_logo_1786788354186.jpg";
 import { User } from "firebase/auth";
 import { CareerState } from "../types";
 import { 
