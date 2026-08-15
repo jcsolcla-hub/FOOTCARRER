@@ -1,10 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="google-site-verification" content="CLnZhjbBzHyzYZfL8uE4BAR5VYfspVmq3_Ogw_Yk2h8" />
     
-    <!-- Title & Basic Meta Tags -->
+    <!-- Primary Meta Tags -->
     <title>Footcareer – Juego de fútbol online</title>
     <meta name="title" content="Footcareer – Juego de fútbol online" />
     <meta name="description" content="Footcareer es un juego de fútbol online y simulador de carrera. Crea tu futbolista, ficha por grandes clubes, supera temporadas y sé leyenda. ¡Empieza gratis!" />
@@ -20,18 +21,16 @@
     <meta name="rating" content="General" />
     <meta name="revisit-after" content="2 days" />
 
-    <!-- Google Search Console Verification (Pega aquí tu código si tienes uno específico) -->
-    <meta name="google-site-verification" content="TU_CODIGO_DE_GOOGLE_SEARCH_CONSOLE" />
-
-    <!-- Canonical and Hreflang Tags -->
+    <!-- Canonical and Hreflang Tags (External SEO Signals) -->
     <link id="canonical-link" rel="canonical" href="https://footcarrer.vercel.app/" />
     <link rel="alternate" hreflang="es" href="https://footcarrer.vercel.app/" />
     <link rel="alternate" hreflang="en" href="https://footcarrer.vercel.app/football-career-simulator" />
     <link rel="alternate" hreflang="x-default" href="https://footcarrer.vercel.app/" />
 
-    <!-- Open Graph / Facebook / WhatsApp (Foto de Perfil y Previsualización) -->
+    <!-- Open Graph / Facebook / WhatsApp -->
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://footcarrer.vercel.app/" />
+    <meta property="og:site_name" content="Footcareer" />
     <meta property="og:title" content="Footcareer – Juego de fútbol online" />
     <meta property="og:description" content="Footcareer es un juego de fútbol online y simulador de carrera. Crea tu futbolista, ficha por grandes clubes, supera temporadas y sé leyenda. ¡Empieza gratis!" />
     <meta property="og:image" content="https://footcarrer.vercel.app/favicon.png" />
@@ -51,7 +50,7 @@
     <meta name="twitter:image" content="https://footcarrer.vercel.app/favicon.png" />
     <meta name="twitter:image:alt" content="Footcareer Logo" />
     
-    <!-- Favicon & Icons para Google, Navegadores y Móviles -->
+    <!-- Favicon & Icons -->
     <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -68,15 +67,16 @@
     <!-- Canonical URL dynamic adapter -->
     <script>
       try {
-        var currentUrl = window.location.href.split('?')[0].split('#')[0];
-        if (currentUrl && currentUrl.startsWith('http')) {
-          var canLink = document.getElementById('canonical-link');
-          if (canLink) canLink.href = currentUrl;
+        if (typeof window !== "undefined" && window.location.origin) {
+          var canonicalLink = document.getElementById("canonical-link");
+          if (canonicalLink) {
+            canonicalLink.setAttribute("href", window.location.origin + window.location.pathname);
+          }
         }
       } catch (e) {}
     </script>
 
-    <!-- Structured Data (JSON-LD) para Google Search / Schema.org -->
+    <!-- Structured Data (JSON-LD) Factores Externos y Entidades Knowledge Graph -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -172,15 +172,23 @@
           "mainEntity": [
             {
               "@type": "Question",
-              "name": "¿Qué es Footcareer y cómo se juega a este juego de fútbol online?",
+              "name": "¿Qué es Footcareer?",
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": "Footcareer es un simulador de carrera futbolística online donde creas un jugador personalizado, mejoras sus estadísticas y tomas decisiones para ganar ligas, Champions y el Balón de Oro."
+                "text": "Footcareer es un juego de fútbol online y simulador de carrera donde creas un jugador personalizado, eliges su posición, disputas partidos, tomas decisiones tácticas y forjas su trayectoria profesional hasta la retirada."
               }
             },
             {
               "@type": "Question",
-              "name": "¿Qué posiciones y clubes puedo elegir en Footcareer?",
+              "name": "¿Cómo se juega a Footcareer?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "En Footcareer seleccionas tu régimen de entrenamiento en cada temporada, disputas partidos clave de titular o suplente, respondes a periodistas y negocias traspasos con grandes clubes para mejorar tu media OVR."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "¿Qué equipos y posiciones están disponibles en este juego de fútbol online?",
               "acceptedAnswer": {
                 "@type": "Answer",
                 "text": "Puedes jugar como Delantero Centro (DC), Extremo (EXT), Mediapunta (MCO), Centrocampista (MED), Pivote Defensivo (MCD), Lateral (LAT), Defensa Central (DFC) o Portero (POR), compitiendo en ligas como LaLiga, Premier League, Serie A y Bundesliga."
@@ -225,31 +233,100 @@
       ]
     }
     </script>
-    
-    <!-- Google Fonts Preconnect -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Teko:wght@500;600;700&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <!-- Fallback semántico indexable por Googlebot -->
+    <!-- Root Container con HTML semántico inicial para rastreadores SEO y motores de búsqueda -->
+    <div id="root">
+      <div style="max-width:880px;margin:0 auto;padding:24px;font-family:system-ui,sans-serif;color:#e8f0ec;background:#0a1210;line-height:1.6;">
+        <header style="text-align:center;margin-bottom:28px;">
+          <h1 style="font-size:28px;color:#e8b84b;margin-bottom:8px;">Footcareer – Juego de fútbol online</h1>
+          <p style="font-size:15px;color:#9cb5a8;">Crea tu futbolista, ficha por clubes históricos, supera temporadas y conviértete en leyenda del fútbol en este juego de fútbol online gratuito.</p>
+        </header>
+
+        <nav style="background:#11201b;border:1px solid #1e3a31;border-radius:12px;padding:12px 16px;margin-bottom:24px;font-size:13px;">
+          <strong style="color:#e8b84b;">Navegación del juego:</strong>
+          <a href="#que-es-footcareer" style="color:#e8f0ec;margin:0 8px;">¿Qué es?</a> |
+          <a href="#como-se-juega" style="color:#e8f0ec;margin:0 8px;">Cómo jugar</a> |
+          <a href="#posiciones-jugadores" style="color:#e8f0ec;margin:0 8px;">Ver jugadores</a> |
+          <a href="#equipos-ligas" style="color:#e8f0ec;margin:0 8px;">Ver equipos</a> |
+          <a href="#temporadas-traspasos" style="color:#e8f0ec;margin:0 8px;">Ver temporadas</a> |
+          <a href="#empieza-a-jugar" style="color:#e8b84b;font-weight:bold;margin:0 8px;">Jugar a Footcareer</a>
+        </nav>
+
+        <section id="que-es-footcareer" style="margin-bottom:24px;">
+          <h2 style="font-size:20px;color:#e8f0ec;border-bottom:1px solid #1e3a31;padding-bottom:6px;">¿Qué es Footcareer?</h2>
+          <p><strong>Footcareer</strong> es un innovador <em>juego de fútbol online</em> y simulador de carrera interactivo que te permite vivir la experiencia deportiva más completa del fútbol internacional. En Footcareer tomas el control directo de la vida de tu futbolista: desde tus primeros pasos como joven promesa en divisiones inferiores hasta alcanzar el estatus de icono mundial del fútbol.</p>
+          <p>Este juego de fútbol online combina decisiones estratégicas de entrenamiento, partidos de alta tensión, negociaciones de contratos multimillonarios y convocatorias con la Selección Nacional. En Footcareer cada temporada representa un reto único para subir tu media OVR y conquistar títulos.</p>
+        </section>
+
+        <section id="como-se-juega" style="margin-bottom:24px;">
+          <h2 style="font-size:20px;color:#e8f0ec;border-bottom:1px solid #1e3a31;padding-bottom:6px;">¿Cómo se juega a Footcareer?</h2>
+          <p>Jugar a <strong>Footcareer</strong> es rápido y dinámico. En cada año de tu carrera futbolística deberás gestionar aspectos fundamentales:</p>
+          <ul>
+            <li><strong>Entrenamientos semanales:</strong> Elige rutinas intensivas para acelerar tu progresión o enfoques equilibrados para prevenir lesiones en este juego de fútbol online.</li>
+            <li><strong>Partidos y finales:</strong> Decide tu rol en finales de copa y partidos cruciales de liga para maximizar tu impacto goleador y defensivo.</li>
+            <li><strong>Ruedas de prensa:</strong> Responde a los periodistas para moldear tu liderazgo, carisma y relación con la afición del club.</li>
+          </ul>
+        </section>
+
+        <section id="equipos-jugadores-temporadas" style="margin-bottom:24px;">
+          <h2 style="font-size:20px;color:#e8f0ec;border-bottom:1px solid #1e3a31;padding-bottom:6px;">Equipos, jugadores y temporadas en el juego de fútbol online</h2>
+          <div id="posiciones-jugadores">
+            <h3 style="font-size:16px;color:#e8b84b;">Posiciones de los Jugadores</h3>
+            <p>Personaliza a tu futbolista entre 8 posiciones: Delantero Centro (DC), Extremo (EXT), Mediapunta (MCO), Centrocampista (MED), Pivote Defensivo (MCD), Lateral (LAT), Defensa Central (DFC) y Portero (POR).</p>
+          </div>
+          <div id="equipos-ligas">
+            <h3 style="font-size:16px;color:#e8b84b;">Clubes y Ligas de Élite</h3>
+            <p>Ficha por los clubes más laureados de LaLiga, Premier League, Serie A, Bundesliga y Ligue 1. Recibe ofertas de traspaso acordes a tu valor de mercado en Footcareer.</p>
+          </div>
+          <div id="temporadas-traspasos">
+            <h3 style="font-size:16px;color:#e8b84b;">Temporadas, Títulos y Balón de Oro</h3>
+            <p>Compite temporada a temporada por la Champions League, la Copa del Mundo con tu Selección Nacional y el codiciado Balón de Oro en este juego de fútbol online.</p>
+          </div>
+        </section>
+
+        <section style="margin-bottom:24px;">
+          <h2 style="font-size:18px;color:#e8f0ec;border-bottom:1px solid #1e3a31;padding-bottom:6px;">Organizaciones Oficiales y Referencias de Fútbol</h2>
+          <p style="font-size:13px;color:#9cb5a8;">Fuentes y organismos oficiales que inspiran el realismo y las competiciones de Footcareer:</p>
+          <p style="font-size:13px;">
+            <a href="https://www.fifa.com/" target="_blank" rel="noopener noreferrer" style="color:#e8b84b;margin-right:12px;">FIFA Oficial ↗</a>
+            <a href="https://www.uefa.com/" target="_blank" rel="noopener noreferrer" style="color:#e8b84b;margin-right:12px;">UEFA Champions League ↗</a>
+            <a href="https://www.laliga.com/" target="_blank" rel="noopener noreferrer" style="color:#e8b84b;margin-right:12px;">LaLiga EA Sports ↗</a>
+            <a href="https://www.premierleague.com/" target="_blank" rel="noopener noreferrer" style="color:#e8b84b;margin-right:12px;">Premier League ↗</a>
+            <a href="https://es.wikipedia.org/wiki/Reglas_del_f%C3%BAtbol" target="_blank" rel="noopener noreferrer" style="color:#e8b84b;">Reglas del Fútbol (Wikipedia) ↗</a>
+          </p>
+        </section>
+
+        <section id="empieza-a-jugar" style="margin-bottom:24px;text-align:center;background:#11201b;padding:20px;border-radius:12px;border:1px solid #e8b84b;">
+          <h2 style="font-size:22px;color:#e8b84b;margin-bottom:8px;">Empieza a jugar a Footcareer</h2>
+          <p style="margin-bottom:16px;">¡Inicia tu carrera futbolística hoy mismo! Sin descargas ni esperas, disponible directamente en tu navegador en este juego de fútbol online gratuito.</p>
+          <a href="#empieza-a-jugar" style="display:inline-block;background:#e8b84b;color:#0a1210;padding:10px 24px;font-weight:bold;text-decoration:none;border-radius:8px;">Jugar a Footcareer Ahora</a>
+        </section>
+
+        <footer style="border-top:1px solid #1e3a31;padding-top:16px;font-size:12px;color:#9cb5a8;text-align:center;">
+          <p>© 2026 Footcareer – Juego de fútbol online · Todos los derechos reservados.</p>
+          <p>
+            <a href="/simulador-carrera-futbolistica" style="color:#e8b84b;margin:0 8px;">Guía de Simulación</a> |
+            <a href="/como-funciona" style="color:#e8b84b;margin:0 8px;">Cómo Funciona</a> |
+            <a href="/football-career-simulator" style="color:#e8b84b;margin:0 8px;">Footcareer Game (EN)</a>
+          </p>
+        </footer>
+      </div>
+    </div>
+
+    <!-- Fallback semántico para rastreadores que no ejecutan JavaScript -->
     <noscript>
-      <header style="padding: 20px; background: #0c1410; color: #fff; text-align: center; font-family: sans-serif;">
-        <h1>Footcareer – Juego de fútbol online y Simulador de Carrera</h1>
-        <p>Crea tu futbolista, ficha por grandes clubes, supera temporadas y sé leyenda en el mejor simulador de carrera de fútbol online.</p>
-        <p>Para disfrutar de la simulación interactiva completa, activa JavaScript en tu navegador.</p>
-      </header>
+      <div style="max-width:880px;margin:20px auto;padding:20px;font-family:sans-serif;color:#fff;background:#111;">
+        <h1>Footcareer – Juego de fútbol online</h1>
+        <h2>Simulador de Carrera Futbolística Online</h2>
+        <p>Footcareer es un juego de fútbol online gratuito donde creas a tu futbolista, eliges su posición, entrenas para mejorar tu OVR, fichas por los mejores clubes del mundo y ganas títulos internacionales.</p>
+        <h2>¿Cómo se juega a Footcareer?</h2>
+        <p>Personaliza a tu jugador, toma decisiones en ruedas de prensa, entrena semanalmente y compite por el Balón de Oro en este juego de fútbol online.</p>
+        <p><a href="https://footcarrer.vercel.app/">Entrar a Footcareer</a></p>
+      </div>
     </noscript>
 
-    <!-- Contenido semántico para buscadores y lectores de pantalla -->
-    <header class="sr-only">
-      <h1>Footcareer – Juego de fútbol online y Simulador de Carrera</h1>
-      <p>Simulador interactivo donde creas y gestionas tu carrera como futbolista profesional de élite.</p>
-    </header>
-
-    <main id="root"></main>
-
-    <!-- Entry Point de la Aplicación -->
+    <!-- Script principal de React -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
