@@ -15,6 +15,8 @@ import {
   Globe
 } from "lucide-react";
 import { ShareBar } from "./ShareBar";
+import { GoogleLogo } from "./SocialLogos";
+import { GOOGLE_REVIEWS_URL } from "./GoogleReviewModal";
 
 export const SeoInfoSection: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -446,6 +448,20 @@ export const SeoInfoSection: React.FC = () => {
             className="hover:text-[var(--gold)] transition-colors underline"
           >
             Footcareer Game (EN)
+          </a>
+          <a
+            href={GOOGLE_REVIEWS_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-[var(--panel-2)] border border-[var(--gold)]/30 hover:border-[var(--gold)] text-[var(--gold)] hover:text-white transition-all font-semibold"
+            title="Valorar Footcareer en Google"
+          >
+            <span className="p-0.5 rounded bg-white flex items-center justify-center">
+              <GoogleLogo size={12} />
+            </span>
+            <span>Reseñas Google</span>
+            <span>★★★★★</span>
+            <span className="text-white font-bold">4.9</span>
           </a>
         </div>
       </footer>

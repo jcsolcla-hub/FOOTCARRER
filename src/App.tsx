@@ -73,6 +73,7 @@ import {
 } from "./components/SeasonModals";
 import { getRandomPressQuestion, getRandomManagementQuestion, getRandomExternalFactorQuestion } from "./data/pressQuestions";
 import { TrainingQuestionModal, CupFinalModal } from "./components/SeasonDecisionModals";
+import { GoogleReviewModal, GoogleReviewBadgeButton, GOOGLE_REVIEW_STORAGE_KEY } from "./components/GoogleReviewModal";
 
 const SAVE_KEY = "leyenda_career_save_v2";
 
@@ -95,6 +96,44 @@ export default function App() {
   const [careerState, setCareerState] = useState<CareerState | null>(null);
   const [inInteractiveMode, setInInteractiveMode] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Google Review Prompt System
+  const [showReviewModal, setShowReviewModal] = useState<boolean>(false);
+  const [reviewModalInitialStep, setReviewModalInitialStep] = useState<"ask" | "rate">("ask");
+
+  const checkAndTriggerReviewPrompt = (forceAsk: boolean = false) => {
+    try {
+      const saved = localStorage.getItem(GOOGLE_REVIEW_STORAGE_KEY);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (data.status === "completed") return; // never auto-prompt again
+        if (!forceAsk) {
+          if (data.status === "dismissed_no") {
+            // don't show for 7 days
+            if (Date.now() - (data.timestamp || 0) < 7 * 24 * 60 * 60 * 1000) return;
+          }
+          if (data.status === "postponed") {
+            // don't show for 3 days
+            if (Date.now() - (data.timestamp || 0) < 3 * 24 * 60 * 60 * 1000) return;
+          }
+        }
+      }
+      setReviewModalInitialStep("ask");
+      setShowReviewModal(true);
+    } catch {
+      // safe fallback
+    }
+  };
+
+  // Automatically prompt after user has actively played for ~45 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (careerState && !careerState.player.retired) {
+        checkAndTriggerReviewPrompt();
+      }
+    }, 45000);
+    return () => clearTimeout(timer);
+  }, [careerState]);
 
   // Modals / Flow States
   const [isSpinning, setIsSpinning] = useState<boolean>(false);
@@ -1647,7 +1686,13 @@ export default function App() {
 
     let idx = 0;
     const processPostQueue = () => {
-      if (idx >= queue.length) return;
+      if (idx >= queue.length) {
+        // When post-season sequence concludes and returns to dashboard, check if review prompt is appropriate
+        setTimeout(() => {
+          checkAndTriggerReviewPrompt();
+        }, 1200);
+        return;
+      }
       const item = queue[idx++];
       item(processPostQueue);
     };
@@ -1751,6 +1796,10 @@ export default function App() {
           existingGame={null}
           onContinueGame={() => {}}
           onCreateGame={(newState) => saveState(newState)}
+          onOpenReviewModal={(step) => {
+            setReviewModalInitialStep(step || "rate");
+            setShowReviewModal(true);
+          }}
         />
       ) : careerState.player.retired ? (
         <RetirementView
@@ -1787,6 +1836,10 @@ export default function App() {
             });
           }}
           onLinkAccount={() => setShowLinkModal(true)}
+          onOpenReviewModal={(step) => {
+            setReviewModalInitialStep(step || "rate");
+            setShowReviewModal(true);
+          }}
         />
       ) : (
         <DashboardView
@@ -1816,6 +1869,10 @@ export default function App() {
             });
           }}
           onLinkAccount={() => setShowLinkModal(true)}
+          onOpenReviewModal={(step) => {
+            setReviewModalInitialStep(step || "rate");
+            setShowReviewModal(true);
+          }}
         />
       )}
 
@@ -1996,6 +2053,26 @@ export default function App() {
           onSelectOption={showCupFinalModalData.onSelectOption}
         />
       )}
+
+      {/* Google Review Modal Popup */}
+      <GoogleReviewModal
+        isOpen={showReviewModal}
+        initialStep={reviewModalInitialStep}
+        onClose={() => setShowReviewModal(false)}
+        onReviewed={(rating) => {
+          setToastMessage(`⭐ ¡Muchísimas gracias por tu valoración de ${rating} estrellas!`);
+          setTimeout(() => setToastMessage(null), 4000);
+        }}
+      />
+
+      {/* Floating Google Review Button - Always visible on page load */}
+      <GoogleReviewBadgeButton
+        onClick={() => {
+          setReviewModalInitialStep("rate");
+          setShowReviewModal(true);
+        }}
+        variant="floating"
+      />
     </div>
   );
 }

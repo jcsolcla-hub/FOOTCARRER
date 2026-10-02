@@ -22,24 +22,29 @@ import {
   getDoc, 
   setDoc, 
   deleteDoc, 
-  serverTimestamp 
+  serverTimestamp,
+  getDocFromServer 
 } from "firebase/firestore";
+import firebaseConfig from "../../firebase-applet-config.json";
 
-// Your web app's Firebase configuration
-export const firebaseConfig = {
-  apiKey: "AIzaSyAD4c2NEI-XJuzKqr6NJw5OoZoK-YLElHo",
-  authDomain: "footlife-bfcc7.firebaseapp.com",
-  projectId: "footlife-bfcc7",
-  storageBucket: "footlife-bfcc7.firebasestorage.app",
-  messagingSenderId: "431303758783",
-  appId: "1:431303758783:web:7777e321f1ef7708c2070a",
-  measurementId: "G-4DGKJKXGKD"
-};
+export { firebaseConfig };
 
-// Initialize Firebase
+// Initialize Firebase using the connected project
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-export const db = getFirestore(app);
+export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
+
+// Validate connection to Firestore
+async function testConnection() {
+  try {
+    await getDocFromServer(doc(db, "test", "connection"));
+  } catch (error) {
+    if (error instanceof Error && error.message.includes("the client is offline")) {
+      console.error("Please check your Firebase configuration.");
+    }
+  }
+}
+testConnection();
 
 export let analytics: any = null;
 if (typeof window !== "undefined") {

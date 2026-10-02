@@ -29,6 +29,18 @@ html, body {
   min-height: 100vh;
   line-height: 1.4;
   overflow-x: hidden;
+  -webkit-touch-callout: none;
+}
+
+/* Security & Protection against asset scraping */
+img, svg, button {
+  -webkit-user-drag: none;
+  user-select: none;
+}
+
+::selection {
+  background: rgba(232, 184, 75, 0.35);
+  color: #f1efe6;
 }
 
 .stripe-field {

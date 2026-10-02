@@ -30,6 +30,8 @@ import {
 } from "../lib/careerEventEngine";
 import { MatchKeyMomentsModal } from "./MatchKeyMomentsModal";
 import { BootsAndPromoModal, CupFinalModal, InteractiveDecisionCard } from "./SeasonDecisionModals";
+import { GoogleReviewBadgeButton } from "./GoogleReviewModal";
+import { ReviewsSection } from "./ReviewsSection";
 
 interface InteractiveSeasonViewProps {
   currentUser: User | null;
@@ -41,6 +43,7 @@ interface InteractiveSeasonViewProps {
   onOpenPressModal: () => void;
   onLogout: () => void;
   onLinkAccount: () => void;
+  onOpenReviewModal?: (step?: "ask" | "rate") => void;
 }
 
 export const InteractiveSeasonView: React.FC<InteractiveSeasonViewProps> = ({
@@ -52,7 +55,8 @@ export const InteractiveSeasonView: React.FC<InteractiveSeasonViewProps> = ({
   onFastForwardSeason,
   onOpenPressModal,
   onLogout,
-  onLinkAccount
+  onLinkAccount,
+  onOpenReviewModal
 }) => {
   const p = state.player;
   const [activeTab, setActiveTab] = useState<"match" | "calendar" | "training" | "coach" | "standings" | "objectives" | "attributes">("match");
@@ -60,6 +64,7 @@ export const InteractiveSeasonView: React.FC<InteractiveSeasonViewProps> = ({
   const [activeMatchModalFixture, setActiveMatchModalFixture] = useState<SeasonMatchFixture | null>(null);
   const [showBootsModal, setShowBootsModal] = useState<boolean>(false);
   const [showCupFinalModal, setShowCupFinalModal] = useState<boolean>(false);
+  const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const currentFixture = activeSeason.fixtures[activeSeason.currentFixtureIndex] || null;
@@ -384,6 +389,28 @@ export const InteractiveSeasonView: React.FC<InteractiveSeasonViewProps> = ({
           FOOTCARRER · MODO CARRERA<span>.</span>
         </div>
         <div className="btn-row" style={{ gap: "8px" }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowReviewsModal(true)}
+            style={{
+              padding: "8px 12px",
+              fontSize: "12px",
+              color: "var(--gold)",
+              border: "1px solid rgba(232, 184, 75, 0.4)",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              fontWeight: 700
+            }}
+            title="Ver y escribir reseñas de la comunidad"
+          >
+            <span>⭐</span>
+            <span>Reseñas</span>
+          </button>
+          {onOpenReviewModal && (
+            <GoogleReviewBadgeButton onClick={() => onOpenReviewModal("rate")} variant="header" />
+          )}
           <button className="btn btn-secondary" onClick={() => setShowBootsModal(true)} style={{ padding: "8px 12px", fontSize: "12px", color: "var(--gold)" }}>
             👟 Botas & Promos
           </button>
@@ -954,6 +981,16 @@ export const InteractiveSeasonView: React.FC<InteractiveSeasonViewProps> = ({
             setShowCupFinalModal(false);
             handleSimulateMatch();
           }}
+        />
+      )}
+
+      {/* Modal flotante de Reseñas */}
+      {showReviewsModal && (
+        <ReviewsSection
+          isModal
+          initialPlayerName={p.name}
+          initialClub={p.club}
+          onClose={() => setShowReviewsModal(false)}
         />
       )}
     </div>

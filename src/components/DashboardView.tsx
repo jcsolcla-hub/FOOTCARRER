@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import appIconImg from "../assets/images/footcarrer_favicon_logo_1786788354186.jpg";
 import { User } from "firebase/auth";
 import { CareerState } from "../types";
@@ -10,6 +10,8 @@ import {
   clamp 
 } from "../data/clubsAndLeagues";
 import { TrophySvg } from "./TrophySvg";
+import { GoogleReviewBadgeButton } from "./GoogleReviewModal";
+import { ReviewsSection } from "./ReviewsSection";
 
 interface DashboardViewProps {
   currentUser: User | null;
@@ -19,6 +21,7 @@ interface DashboardViewProps {
   onNewCareer: () => void;
   onLogout: () => void;
   onLinkAccount: () => void;
+  onOpenReviewModal?: (step?: "ask" | "rate") => void;
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
@@ -29,7 +32,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onNewCareer,
   onLogout,
   onLinkAccount,
+  onOpenReviewModal,
 }) => {
+  const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
   const p = state.player;
   const hasActiveSeason = Boolean(state.activeSeason);
   const yearLabel = `${p.seasonYearStart}/${(p.seasonYearStart + 1).toString().slice(2)}`;
@@ -55,6 +60,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           FOOTCARRER<span>.</span>
         </div>
         <div className="btn-row" style={{ gap: "8px" }}>
+          <button
+            type="button"
+            className="btn btn-secondary"
+            onClick={() => setShowReviewsModal(true)}
+            style={{
+              padding: "8px 12px",
+              fontSize: "12px",
+              color: "var(--gold)",
+              border: "1px solid rgba(232, 184, 75, 0.4)",
+              display: "flex",
+              alignItems: "center",
+              gap: "5px",
+              fontWeight: 700
+            }}
+            title="Ver y escribir reseñas de la comunidad"
+          >
+            <span>⭐</span>
+            <span>Reseñas</span>
+          </button>
+          {onOpenReviewModal && (
+            <GoogleReviewBadgeButton onClick={() => onOpenReviewModal("rate")} variant="header" />
+          )}
           {currentUser && currentUser.isAnonymous && (
             <button className="btn btn-ghost" onClick={onLinkAccount} style={{ padding: "8px 14px", fontSize: "12px" }}>
               Vincular cuenta
@@ -216,6 +243,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               ))}
           </div>
         </div>
+      )}
+
+      {/* Sección ⭐ Reseñas de la comunidad */}
+      <div style={{ marginTop: "28px" }}>
+        <ReviewsSection 
+          initialPlayerName={p.name} 
+          initialClub={p.club} 
+        />
+      </div>
+
+      {/* Modal flotante de Reseñas */}
+      {showReviewsModal && (
+        <ReviewsSection
+          isModal
+          initialPlayerName={p.name}
+          initialClub={p.club}
+          onClose={() => setShowReviewsModal(false)}
+        />
       )}
     </div>
   );

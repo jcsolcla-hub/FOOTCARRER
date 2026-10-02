@@ -1,0 +1,75 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net: Default-deny all unmatched paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Security Primitive Helpers
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Helper de validación estricta para la entidad Reseña
+    function isValidReview(data) {
+      return data.userId == request.auth.uid
+        && (data.rating is number || data.rating is int)
+        && data.rating >= 1
+        && data.rating <= 5
+        && data.comment is string
+        && data.comment.size() >= 1
+        && data.comment.size() <= 1000
+        && (!('userName' in data) || (data.userName is string && data.userName.size() <= 120))
+        && (!('nombre' in data) || (data.nombre is string && data.nombre.size() <= 120))
+        && (!('comentario' in data) || (data.comentario is string && data.comentario.size() <= 1000))
+        && (!('authorPhoto' in data) || data.authorPhoto == null || (data.authorPhoto is string && data.authorPhoto.size() <= 1000))
+        && (!('isGoogleUser' in data) || data.isGoogleUser is bool)
+        && data.createdAt == request.time
+        && data.keys().hasAll(['userId', 'rating', 'comment', 'createdAt'])
+        && data.keys().hasOnly(['userId', 'userName', 'nombre', 'rating', 'comment', 'comentario', 'createdAt', 'authorPhoto', 'isGoogleUser']);
+    }
+
+    // Connection test document
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // Colección de usuarios: Solo el propietario autenticado tiene acceso a sus datos
+    match /users/{userId} {
+      allow read, write: if isOwner(userId) && isValidId(userId);
+      
+      match /career/{careerId} {
+        allow read, write: if isOwner(userId) && isValidId(userId) && isValidId(careerId);
+      }
+    }
+
+    // Colección de reseñas reales y compartidas
+    match /reviews/{reviewId} {
+      // Lectura pública: get valida el ID; list permite a todos los usuarios ver las reseñas
+      allow get: if isValidId(reviewId);
+      allow list: if true;
+
+      // Creación: Usuario autenticado, ID válido, esquema y campos validados, timestamp del servidor
+      allow create: if isSignedIn()
+        && isValidId(reviewId)
+        && isValidReview(request.resource.data);
+
+      // Eliminación: Solo el autor de la reseña puede borrarla
+      allow delete: if isSignedIn()
+        && isValidId(reviewId)
+        && resource.data.userId == request.auth.uid;
+
+      // Inmutabilidad estricta: No se permite modificar una reseña existente para evitar alteraciones
+      allow update: if false;
+    }
+  }
+}

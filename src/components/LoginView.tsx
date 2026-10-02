@@ -12,6 +12,7 @@ import {
 } from "../lib/firebaseHelpers";
 import { GoogleLogo, AppleLogo } from "./SocialLogos";
 import { SeoInfoSection } from "./SeoInfoSection";
+import { ReviewsSection } from "./ReviewsSection";
 
 interface LoginViewProps {
   currentUser: User | null;
@@ -19,6 +20,7 @@ interface LoginViewProps {
   authBusy: boolean;
   onClearError: () => void;
   showToast: (msg: string) => void;
+  onOpenReviews?: () => void;
 }
 
 export const LoginView: React.FC<LoginViewProps> = ({
@@ -27,11 +29,13 @@ export const LoginView: React.FC<LoginViewProps> = ({
   authBusy,
   onClearError,
   showToast,
+  onOpenReviews,
 }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [localErr, setLocalErr] = useState<string | null>(null);
   const [activeProvider, setActiveProvider] = useState<string | null>(null);
+  const [showReviewsModal, setShowReviewsModal] = useState<boolean>(false);
 
   const isLinking = currentUser && currentUser.isAnonymous;
 
@@ -188,6 +192,31 @@ export const LoginView: React.FC<LoginViewProps> = ({
           <span>{activeProvider === "guest" ? "Entrando como invitado..." : "Continuar como invitado"}</span>
         </button>
 
+        {/* Botón de Reseñas solicitado explícitamente abajo de anónimo entrar */}
+        <button
+          type="button"
+          className="btn-social"
+          onClick={() => onOpenReviews ? onOpenReviews() : setShowReviewsModal(true)}
+          style={{
+            background: "linear-gradient(135deg, rgba(232, 184, 75, 0.22) 0%, rgba(20, 29, 23, 0.95) 100%)",
+            color: "var(--gold)",
+            border: "1.5px solid var(--gold)",
+            fontWeight: 800,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "9px",
+            marginTop: "10px",
+            boxShadow: "0 4px 16px rgba(232, 184, 75, 0.22)",
+            cursor: "pointer",
+            transition: "transform 0.15s ease"
+          }}
+          title="Ver opiniones de la comunidad y dejar tu reseña real con Google"
+        >
+          <span className="ico" style={{ fontSize: "18px" }}>⭐</span>
+          <span>⭐ Reseñas con Google (Firebase)</span>
+        </button>
+
         {/* Compartir por WhatsApp antes de iniciar sesión */}
         <a
           href={`https://api.whatsapp.com/send?text=${encodeURIComponent("⚽ ¡Prueba Footcarrer! Crea tu carrera futbolística y compite con jugadores y equipos de diferentes épocas.\nhttps://footcarrer.vercel.app/")}`}
@@ -250,10 +279,23 @@ export const LoginView: React.FC<LoginViewProps> = ({
         </div>
       </div>
 
+      {/* Sección ⭐ Reseñas de la Comunidad */}
+      <div style={{ maxWidth: "860px", margin: "24px auto 0", width: "100%" }}>
+        <ReviewsSection />
+      </div>
+
       {/* Guía SEO e información accesible */}
       <div style={{ maxWidth: "860px", margin: "0 auto", width: "100%" }}>
         <SeoInfoSection />
       </div>
+
+      {/* Modal flotante de Reseñas */}
+      {showReviewsModal && (
+        <ReviewsSection 
+          isModal 
+          onClose={() => setShowReviewsModal(false)} 
+        />
+      )}
     </div>
   );
 };

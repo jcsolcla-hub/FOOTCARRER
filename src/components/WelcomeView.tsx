@@ -11,18 +11,23 @@ import {
   calculateRealisticMarketValue,
   calculateRealisticSalary
 } from "../data/clubsAndLeagues";
+import { sanitizeInput } from "../lib/securityGuard";
 import { SeoInfoSection } from "./SeoInfoSection";
+import { GoogleReviewBadgeButton } from "./GoogleReviewModal";
+import { ReviewsSection } from "./ReviewsSection";
 
 interface WelcomeViewProps {
   existingGame: CareerState | null;
   onContinueGame: () => void;
   onCreateGame: (state: CareerState) => void;
+  onOpenReviewModal?: (step?: "ask" | "rate") => void;
 }
 
 export const WelcomeView: React.FC<WelcomeViewProps> = ({
   existingGame,
   onContinueGame,
   onCreateGame,
+  onOpenReviewModal,
 }) => {
   const [name, setName] = useState("");
   const [nationality, setNationality] = useState("España");
@@ -44,7 +49,8 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
   };
 
   const handleCreate = () => {
-    const finalName = name.trim() || "Jugador Anónimo";
+    const rawName = name.trim() || "Jugador Anónimo";
+    const finalName = sanitizeInput(rawName, 40) || "Jugador Anónimo";
     const clubObj = CLUBS.find(c => c.name === selectedClubName) || CLUBS[0];
     const baseLevel = randInt(58, 66) + (clubObj.tier - 3);
     const potential = clamp(baseLevel + randInt(14, 30) - (age - 17) * 2, baseLevel + 5, 96);
@@ -114,7 +120,24 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
         <div className="eyebrow">Simulador de Carrera Futbolística · Edición 2026</div>
         <h1>Footcareer – Juego de fútbol online</h1>
         <p className="sub">Crea tu futbolista, ficha por clubes históricos, supera temporadas y conviértete en leyenda del fútbol en este juego de fútbol online.</p>
+        {onOpenReviewModal && (
+          <div style={{ marginTop: "14px", display: "flex", justifyContent: "center" }}>
+            <GoogleReviewBadgeButton 
+              variant="header" 
+              onClick={() => onOpenReviewModal("rate")} 
+            />
+          </div>
+        )}
       </header>
+
+      {onOpenReviewModal && (
+        <div style={{ maxWidth: "600px", margin: "0 auto 16px" }}>
+          <GoogleReviewBadgeButton 
+            variant="banner" 
+            onClick={() => onOpenReviewModal("rate")} 
+          />
+        </div>
+      )}
 
       {existingGame && !existingGame.player.retired && (
         <div className="card">
@@ -200,6 +223,11 @@ export const WelcomeView: React.FC<WelcomeViewProps> = ({
         <button className="btn btn-primary btn-block" onClick={handleCreate} style={{ marginTop: "6px" }}>
           EMPEZAR CARRERA
         </button>
+      </div>
+
+      {/* Sección ⭐ Reseñas de la comunidad */}
+      <div style={{ maxWidth: "860px", margin: "24px auto 0", width: "100%" }}>
+        <ReviewsSection />
       </div>
 
       {/* Sección Informativa Completa para SEO y Guía de Jugadores */}
