@@ -40,10 +40,32 @@ export function doAppleLogin() {
   return handleSignInOrLink(provider);
 }
 
-export function doAnonymousLogin() {
-  return signInAnonymously(auth).catch((e: any) => {
-    throw new Error(authErrorMessage(e));
-  });
+export async function doAnonymousLogin(): Promise<any> {
+  try {
+    const cred = await signInAnonymously(auth);
+    localStorage.removeItem("footcareer_guest_session");
+    return cred.user;
+  } catch (e: any) {
+    console.warn("Firebase Auth signInAnonymously no disponible o restringido, activando sesión de invitado local:", e);
+    let guestUid = localStorage.getItem("footcareer_guest_uid");
+    if (!guestUid) {
+      guestUid = "guest_" + Math.random().toString(36).substring(2, 11);
+      localStorage.setItem("footcareer_guest_uid", guestUid);
+    }
+    const guestUser = {
+      uid: guestUid,
+      isAnonymous: true,
+      displayName: "Jugador Invitado",
+      email: null,
+      photoURL: null,
+      providerData: [],
+    };
+    localStorage.setItem("footcareer_guest_session", JSON.stringify(guestUser));
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new CustomEvent("footcareer-guest-auth", { detail: guestUser }));
+    }
+    return guestUser;
+  }
 }
 
 export function doEmailLogin(email: string, pass: string) {
@@ -71,5 +93,9 @@ export function doPasswordReset(email: string) {
 }
 
 export function doLogout() {
-  return signOut(auth);
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("footcareer_guest_session");
+    window.dispatchEvent(new CustomEvent("footcareer-guest-auth", { detail: null }));
+  }
+  return signOut(auth).catch(() => {});
 }

@@ -79,10 +79,11 @@ export function authErrorMessage(err: any): string {
   return map[code] || err.message || "Ha ocurrido un error inesperado.";
 }
 
-export async function ensureUserDoc(user: User) {
+export async function ensureUserDoc(user: any) {
+  if (!user || (user.uid && user.uid.startsWith("guest_"))) return;
   try {
     const userRef = doc(db, "users", user.uid);
-    const method = user.providerData.length ? user.providerData[0].providerId : "anonymous";
+    const method = user.providerData && user.providerData.length ? user.providerData[0].providerId : "anonymous";
     await setDoc(userRef, {
       uid: user.uid,
       email: user.email || null,
@@ -101,8 +102,14 @@ export async function ensureUserDoc(user: User) {
   }
 }
 
-export async function syncCareerToFirestore(user: User | null, state: any) {
+export async function syncCareerToFirestore(user: any | null, state: any) {
   if (!user || !state) return;
+  try {
+    localStorage.setItem("footcarrer_career_save_v2", JSON.stringify(state));
+  } catch {}
+
+  if (user.uid && user.uid.startsWith("guest_")) return;
+
   try {
     const careerRef = doc(db, "users", user.uid, "career", "main");
     await setDoc(careerRef, {
@@ -115,6 +122,14 @@ export async function syncCareerToFirestore(user: User | null, state: any) {
 }
 
 export async function loadCareerFromFirestore(uid: string): Promise<any | null> {
+  if (uid && uid.startsWith("guest_")) {
+    try {
+      const local = localStorage.getItem("footcarrer_career_save_v2");
+      return local ? JSON.parse(local) : null;
+    } catch {
+      return null;
+    }
+  }
   try {
     const careerRef = doc(db, "users", uid, "career", "main");
     const snap = await getDoc(careerRef);
@@ -128,6 +143,12 @@ export async function loadCareerFromFirestore(uid: string): Promise<any | null> 
 }
 
 export async function deleteCareerFromFirestore(uid: string) {
+  if (uid && uid.startsWith("guest_")) {
+    try {
+      localStorage.removeItem("footcarrer_career_save_v2");
+    } catch {}
+    return;
+  }
   try {
     const careerRef = doc(db, "users", uid, "career", "main");
     await deleteDoc(careerRef);

@@ -10,6 +10,7 @@ import {
 } from "../types";
 import { flagOf, fmtMoney, fmtSalary, POS_NAMES } from "../data/clubsAndLeagues";
 import { GoogleLogo, AppleLogo } from "./SocialLogos";
+import { sanitizeEmail } from "../lib/securityGuard";
 
 export const LuckSpinnerModal: React.FC<{ phaseText?: string }> = ({ phaseText }) => (
   <div className="modal-backdrop" style={{ zIndex: 9000 }}>
@@ -890,7 +891,7 @@ export const LinkAccountModal: React.FC<LinkAccountModalProps> = ({
           id="link-email"
           placeholder="tucorreo@ejemplo.com"
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={(e) => setEmail(sanitizeEmail(e.target.value))}
         />
         <label htmlFor="link-pass">Contraseña</label>
         <input

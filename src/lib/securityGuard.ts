@@ -4,25 +4,32 @@
  * Protects against:
  * - Code inspection via DevTools shortcuts (F12, Ctrl+Shift+I/J/C, Ctrl+U)
  * - Context menu / Right-click inspection
- * - Cross-Site Scripting (XSS) via robust input sanitization
+ * - Cross-Site Scripting (XSS) via aggressive input sanitization
  * - Reverse engineering and unauthorized tampering
  */
 
 /**
- * Sanitizes user input string against HTML injection, script execution, and malicious payloads
+ * Aggressive input sanitization layer against XSS, HTML injection, prototype poisoning and control characters
  */
-export function sanitizeInput(input: string, maxLength: number = 500): string {
-  if (typeof input !== "string") return "";
+export function sanitizeInput(input: unknown, maxLength: number = 500): string {
+  if (typeof input !== "string") {
+    if (input === null || input === undefined) return "";
+    return String(input).slice(0, maxLength);
+  }
 
-  // Remove control characters and strip HTML tags
   let sanitized = input
-    .replace(/<[^>]*>?/gm, "") // Strip any HTML tags
-    .replace(/javascript:/gi, "") // Remove javascript: pseudo-protocols
-    .replace(/data:/gi, "") // Remove data: URIs
-    .replace(/on\w+\s*=/gi, "") // Remove inline event handlers like onclick=, onerror=
+    // Strip null bytes and control chars
+    .replace(/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/g, "")
+    // Strip all HTML/XML tags
+    .replace(/<[^>]*>?/gm, "")
+    // Strip pseudo-protocols and script patterns
+    .replace(/(?:javascript|vbscript|data|file|about):/gi, "")
+    // Strip common XSS attributes (onerror, onload, onclick, onfocus, etc.)
+    .replace(/on\w+\s*=/gi, "")
+    // Strip angle brackets entirely to prevent any HTML tag reconstruction
+    .replace(/[<>]/g, "")
     .trim();
 
-  // Enforce boundary length
   if (sanitized.length > maxLength) {
     sanitized = sanitized.substring(0, maxLength);
   }
@@ -31,16 +38,51 @@ export function sanitizeInput(input: string, maxLength: number = 500): string {
 }
 
 /**
+ * Sanitizes player names, allowing only alphabetic characters, spaces, accents, hyphens, and apostrophes
+ */
+export function sanitizePlayerName(name: string, maxLength: number = 24): string {
+  if (typeof name !== "string") return "Jugador";
+  // Remove dangerous chars, scripts, and non-alphanumeric/name symbols
+  let cleaned = name
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/[<>"'`$(){}\[\]\\\/;:=?+*^&|~#@!%]/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  if (cleaned.length > maxLength) {
+    cleaned = cleaned.substring(0, maxLength);
+  }
+  return cleaned || "Jugador";
+}
+
+/**
+ * Sanitizes email input
+ */
+export function sanitizeEmail(email: string, maxLength: number = 100): string {
+  if (typeof email !== "string") return "";
+  let cleaned = email
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/[<>"'`$(){}\[\]\\\/;:=?*^&|~#%!]/g, "")
+    .replace(/\s+/g, "")
+    .trim();
+  if (cleaned.length > maxLength) {
+    cleaned = cleaned.substring(0, maxLength);
+  }
+  return cleaned;
+}
+
+/**
  * Escapes characters for safe rendering
  */
 export function escapeHtml(str: string): string {
   if (!str) return "";
-  return str
+  return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
+    .replace(/'/g, "&#039;")
+    .replace(/`/g, "&#96;");
 }
 
 let securityInitialized = false;
